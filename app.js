@@ -1,11 +1,14 @@
 var express = require('express'); // rest api 필수템
 var mongoose = require('mongoose'); // mongodb 연동 필수템
+// swagger UI 세팅
 var swaggerJsdoc = require('swagger-jsdoc');
 var swaggerUi = require('swagger-ui-express'); 
+const swaggerJSDoc = require('swagger-jsdoc');
+// 
 var bodyparser = require('body-parser');
 var app = express();
 var User = require('./models/User');
-const swaggerJSDoc = require('swagger-jsdoc');
+
 require('dotenv').config({path:'variables.env'}) // variables.env 에 mongoDB 관련 비밀번호와 URL 노출방지를 위해 .env 파일생성 및 dotenv 설치 및 연동
 
 
@@ -31,7 +34,7 @@ const options = {
         host : 'localhost:3000',
         basepath : '/',
     },
-    apis : [],
+    apis : ['./routes/index.js'],
 };
 
 const specs = swaggerJsdoc(options);
@@ -56,7 +59,7 @@ mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true, useUnifiedTopo
 //             console.log(user);
 //             res.json({
 //                 message:'User 생성완료'
-//             })
+//             })  
 //         })
 //         .catch(function(err){
 //             res.json({
