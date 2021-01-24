@@ -78,41 +78,41 @@
  *            schema:
  *              $ref: "#/definitions/Response_error"
  */
-router.post('/login', (req, res, next) => {
-    const loginInfo = req.body;
-    if (!Object.prototype.hasOwnProperty.call(loginInfo, 'user_id')
-      || !Object.prototype.hasOwnProperty.call(loginInfo, 'password')) {
-      res.statusCode(400).json({ status: 'error', message: 'Invalid Prameter' });
-    }
-    else {
-      models.LoginHistorys.count({ where: { user_id: loginInfo.user_id, login_success: 'N', created_at: { [models.Sequelize.Op.gt]: moment().subtract(20, 'minutes').toDate() } } }).then((c) => {
-        if (c > 5) {
-          res.statusCode(500).json({ status: 'error', message: 'Login failed several times. Please try again in 10 minutes.' });
-        }
-        else {
-          models.Users.findOne({
-            where: { user_id: loginInfo.user_id, password: loginInfo.password },
-            include: [models.Roles]
-          }).then((u) => {
-            if (u) {
-              const userInfo = {
-                user_id: u.user_id,
-                desc: u.description,
-                role: u.Roles.map(r => r.role_name)
-              };
-              const token = jwt.sign(userInfo, secretKey, {
-                expiresIn: '5m' // 유효 시간은 5분
-              });
-              res.json({ status: 'success', token });
-              loginInfo.login_success = 'Y';
-            }
-            else {
-              res.json({ status: 'error', message: 'check ID or PW' });
-              loginInfo.login_success = 'N';
-            }
-            models.LoginHistorys.create(loginInfo);
-          });
-        }
-      });
-    }
-  });
+// router.post('/login', (req, res, next) => {
+//     const loginInfo = req.body;
+//     if (!Object.prototype.hasOwnProperty.call(loginInfo, 'user_id')
+//       || !Object.prototype.hasOwnProperty.call(loginInfo, 'password')) {
+//       res.statusCode(400).json({ status: 'error', message: 'Invalid Prameter' });
+//     }
+//     else {
+//       models.LoginHistorys.count({ where: { user_id: loginInfo.user_id, login_success: 'N', created_at: { [models.Sequelize.Op.gt]: moment().subtract(20, 'minutes').toDate() } } }).then((c) => {
+//         if (c > 5) {
+//           res.statusCode(500).json({ status: 'error', message: 'Login failed several times. Please try again in 10 minutes.' });
+//         }
+//         else {
+//           models.Users.findOne({
+//             where: { user_id: loginInfo.user_id, password: loginInfo.password },
+//             include: [models.Roles]
+//           }).then((u) => {
+//             if (u) {
+//               const userInfo = {
+//                 user_id: u.user_id,
+//                 desc: u.description,
+//                 role: u.Roles.map(r => r.role_name)
+//               };
+//               const token = jwt.sign(userInfo, secretKey, {
+//                 expiresIn: '5m' // 유효 시간은 5분
+//               });
+//               res.json({ status: 'success', token });
+//               loginInfo.login_success = 'Y';
+//             }
+//             else {
+//               res.json({ status: 'error', message: 'check ID or PW' });
+//               loginInfo.login_success = 'N';
+//             }
+//             models.LoginHistorys.create(loginInfo);
+//           });
+//         }
+//       });
+//     }
+//   });

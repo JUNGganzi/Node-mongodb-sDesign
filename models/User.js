@@ -17,6 +17,7 @@ const userSchema = new Schema({
     soundId : {
         type : String,
     }
+    // 인증 불리언 추가예정
 });
 
 module.exports = mongoose.model('User', userSchema); // User의 model 값임을 알려준다
