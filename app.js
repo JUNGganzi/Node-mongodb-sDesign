@@ -35,6 +35,15 @@ const options = {
         basepath : '/',
     },
     apis : ['./routes/index.js'],
+    schemas: ['http','https'],
+    definitions: {
+        type : 'User', // 모델 정의했는데 쓸줄 모름 젠장
+        properties : {
+            accountEmail : {type : 'string'},
+            accountPw : {type : 'string'},
+            accountName : {type : 'string'}
+        }
+    }
 };
 
 const specs = swaggerJsdoc(options);
