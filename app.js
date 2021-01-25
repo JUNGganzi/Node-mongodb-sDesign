@@ -49,21 +49,3 @@ mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true, useUnifiedTopo
     }
 });
 
-// app.get('/', function(req, res){
-//     let newUser = new User();
-//     newUser.email = 'wjdwjd1501@gmail.com';
-//     newUser.name = 'wjdwjddnjs';
-//     newUser.password = '12341234';
-//     newUser.save()
-//         .then(function(user){
-//             console.log(user);
-//             res.json({
-//                 message:'User 생성완료'
-//             })  
-//         })
-//         .catch(function(err){
-//             res.json({
-//                 message : 'User 생성불가!'
-//             })
-//         })
-// });
