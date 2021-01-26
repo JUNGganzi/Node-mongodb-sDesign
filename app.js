@@ -1,14 +1,16 @@
+
 var express = require('express'); // rest api 필수템
 var mongoose = require('mongoose'); // mongodb 연동 필수템
+// var bcrypt = require('bcryptjs'); // 비밀번호 암호화 모듈
 // swagger UI 세팅
 var swaggerJsdoc = require('swagger-jsdoc');
 var swaggerUi = require('swagger-ui-express'); 
 const swaggerJSDoc = require('swagger-jsdoc');
+
 // 
 var bodyparser = require('body-parser');
 var app = express();
 var User = require('./models/User');
-
 require('dotenv').config({path:'variables.env'}) // variables.env 에 mongoDB 관련 비밀번호와 URL 노출방지를 위해 .env 파일생성 및 dotenv 설치 및 연동
 
 
@@ -58,3 +60,32 @@ mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true, useUnifiedTopo
     }
 });
 
+app.get('/',function(req, res){
+    res.redirect('/api/docs')
+});
+
+
+app.post('/api/create/account', function(req,res){
+    if(!req.body.accountEmail || !req.body.accountName || !req.body.accountPw) {
+        return res.status(400).send({
+            message: "모든 정보를 입력해주세요"
+        })
+    } else {
+        const user = new User ({
+        accountEmail: req.body.accountEmail,
+        accountName: req.body.accountName,
+        accountPw: req.body.accountPw,// bcrypt.hashSync(req.body.accountPw, 10),
+        isActive: req.body.isActive
+    });
+    user
+        .save()
+        .then(function(data){
+            res.send(data)
+        })
+        .catch(function(err){
+            res.send({
+                message: err.message || "에러발생"
+            })
+        });}
+    
+});    
