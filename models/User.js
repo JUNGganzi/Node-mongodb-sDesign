@@ -5,7 +5,6 @@ const userSchema = new Schema({ // schema 를 사용해 테이블,컬렉션 타�
     accountEmail : {
         desc: "useremail",
         type: String,
-        required:true,
     },
     accountName : {
         desc: "username",

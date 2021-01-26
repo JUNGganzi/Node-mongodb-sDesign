@@ -22,7 +22,7 @@
  *        - in: "body"
  *          name: "data"
  *          description: ""
- *          required: true
+ *          required: 
  *          schema:
  *            properties:
  *                accountEmail:

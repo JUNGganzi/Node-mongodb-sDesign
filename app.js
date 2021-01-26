@@ -66,26 +66,11 @@ app.get('/',function(req, res){
 
 
 app.post('/api/create/account', function(req,res){
-    if(!req.body.accountEmail || !req.body.accountName || !req.body.accountPw) {
-        return res.status(400).send({
-            message: "모든 정보를 입력해주세요"
-        })
-    } else {
-        const user = new User ({
-        accountEmail: req.body.accountEmail,
-        accountName: req.body.accountName,
-        accountPw: req.body.accountPw,// bcrypt.hashSync(req.body.accountPw, 10),
-        isActive: req.body.isActive
-    });
-    user
-        .save()
-        .then(function(data){
-            res.send(data)
+    User.create(req.body)
+        .then(function(user){
+            res.send(user)
         })
         .catch(function(err){
-            res.send({
-                message: err.message || "에러발생"
-            })
-        });}
-    
-});    
+            res.status(500).send(err)
+        })
+});
