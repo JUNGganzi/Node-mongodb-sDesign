@@ -23,14 +23,18 @@
  *          name: "data"
  *          description: ""
  *          required: 
- *          schema:
+ *          schema: 
+ *             $ref: '#/definitions/User'
  *            properties:
  *                accountEmail:
  *                    type: string
+ *                    required: true
  *                accountPw:
  *                    type: string
+ *                    required: true
  *                accountName:
  *                    type: string
+ *                    required: true
  *        responses:
  *          200:
  *            description: "[완료]가입이 정상적으로 완료되었습니다."
@@ -430,4 +434,19 @@
  *        responses:
  *          200:
  *            description: "[완료] 업로드가 성공 되었습니다."
+ */
+/**
+ * @swagger
+ *  definitions:
+ *      User:
+ *      type: object
+ *      properties:
+ *        accountEmail:
+ *          type: string
+ *        accountPw:
+ *          type: string 
+ *        accountName:
+ *          type: string   
+ *      xml:
+ *        name: User
  */
