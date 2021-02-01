@@ -5,7 +5,10 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const bodyParser = require("body-parser");
 const User = require('./models/user_model')
+
+
 require('dotenv').config({path:'variables.env'})
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -19,14 +22,12 @@ app.listen(3000, function(err){
 
 const options = {  // swagger ui 세팅
     definition: {
-        openapi : '3.0.0',
+        swagger : "2.0",
         info : {
             title : 'sDesign API 문서',
             version : '1.0',
             // description : '냉무',
         },
-        host : 'localhost:3000',
-        basepath : '/',
     },
     apis : ['./routes/index.js'],
     schemas: ['http','https'],
