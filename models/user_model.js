@@ -37,16 +37,6 @@ userSchema.pre("save", function(next){ // next 콜백은 save 전에 처리할�
     }
 });
 
-userSchema.methods.generateToken = function () {
-    const token = jwt.sign(this._id, "secretToken");
-    this.token = token;
-    return this.save()
-        .then((user) => user)
-        .catch((err) => err)
-}
-
-
-
 userSchema.set('timestamps', true) // 새 테이블 생성될때마다 created,updated 자동으로 현재시각 저장
 
 mongoose.model('User', userSchema);

@@ -29,9 +29,9 @@ exports.create = function(request, response, next) {
     if(!accountEmail || !accountPw || !accountName)
         return response.status(500).json({message: "모든 항목입력주세요"})
     
-    // const checkUser = User.findOne({accountEmail: accountEmail});
-    // if(checkUser)
-    //     return response.status(409).json({message: "이미 존재하는이메일입니다"})
+    const checkUser = User.findOne({accountEmail: accountEmail});
+    if(checkUser)
+        return response.status(409).json({message: "이미 존재하는이메일입니다"})
     
     user.save(function(err){  // save 처리 전에 해싱이 이뤄져야함
         if (err) {

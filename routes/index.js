@@ -94,12 +94,12 @@
  *            type: string
  *        - in: "formData"
  *          name: userImg
+ *          type: file
  *          schema:
- *            type: file
  *        - in: "formData"
  *          name: accountName
+ *          type: string
  *          schema:
- *            type: string
  *        responses:
  *          200:
  *            description: "[완료]업로드가 성공 되었습니다."
