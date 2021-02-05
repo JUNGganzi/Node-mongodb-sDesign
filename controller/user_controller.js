@@ -2,6 +2,7 @@ const User = require('../models/user_model');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');  // 이메일인증
 const jwt = require('jsonwebtoken');
+const fs = require('fs')
 require('dotenv').config();
 
 const MY_SECRET_KEY = process.env.SECRET_KEY
@@ -98,7 +99,10 @@ exports.confirm = function(request, response){ // @ 이 %40 으로 인코딩되�
         }
     })
 }
+exports.updateProfile =  async (request, response) => {
 
+}
+ 
 exports.tokentest = async (request, response) => {
     var token = request.headers.token  // header에서 토큰 받아오기
     var decoded_token = jwt.verify(token, MY_SECRET_KEY); // 생성한토큰 decoded

@@ -17,6 +17,9 @@ var soundSchema = new mongoose.Schema({
     category: {
         type: String
     },
+    tags: {
+        type: String
+    }
 })
 
 

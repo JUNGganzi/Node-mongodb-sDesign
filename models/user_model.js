@@ -24,6 +24,9 @@ var userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    accountImg: {
+        type: String
+    }
 });
 // save 전에 비밀번호 암호화 
 userSchema.pre("save", function(next){ // next 콜백은 save 전에 처리할거 다 하고 save 로 이동
