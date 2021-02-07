@@ -99,8 +99,9 @@ exports.confirm = function(request, response){ // @ 이 %40 으로 인코딩되�
         }
     })
 }
-exports.updateProfile =  async (request, response) => {
 
+exports.updateProfile =  async (request, response) => {
+    await response.send(request.file)
 }
  
 exports.tokentest = async (request, response) => {

@@ -1,6 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const userController = require("../controller/user_controller");
+const multer = require('multer')
+// const upload = multer({
+//     dest: 'profiles/'
+// });
+
+var storage = multer.diskStorage({
+    destination: function(request, file, cb) {
+        cb(null,'profiles/')
+    },
+    filename: function(requset, file, cb) {
+        cb(null,file.fieldname + '-' + Date.now())
+    }
+})
+
+var upload = multer({storage:storage})
 
 // 회원가입
 router.post("/create/account", userController.create);
@@ -12,5 +27,14 @@ router.post("/login", userController.login);
 router.get("/token/test", userController.tokentest)
 // 토큰 으로 프로필정보불러오기
 router.get("/get/profile/info", userController.tokenprofile)
-
+// 토큰값으로 user 프로필 이미지 및 accountname update
+router.post("/update/profile", userController.updateProfile,upload.single('userImg'))// userImg =  키값
+// userController.tokentest,
 module.exports = router;
+
+
+// Key	Description
+// dest or storage :파일이 저장될 위치
+// fileFilter: 어떤 파일을 허용할지 제어하는 함수
+// limits: 업로드 된 데이터의 한도
+// preservePath: 파일의 base name 대신 보존할 파일의 전체 경로
