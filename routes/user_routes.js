@@ -8,7 +8,7 @@ const multer = require('multer')
 
 var storage = multer.diskStorage({
     destination: function(request, file, cb) {
-        cb(null,'profiles/')
+        cb(null,'profiles')
     },
     filename: function(requset, file, cb) {
         cb(null,file.fieldname + '-' + Date.now())
@@ -28,7 +28,7 @@ router.get("/token/test", userController.tokentest)
 // 토큰 으로 프로필정보불러오기
 router.get("/get/profile/info", userController.tokenprofile)
 // 토큰값으로 user 프로필 이미지 및 accountname update
-router.post("/update/profile", userController.updateProfile,upload.single('userImg'))// userImg =  키값
+router.post("/update/profile", upload.single('userImg'),userController.updateProfile)// userImg =  키값
 // userController.tokentest,
 module.exports = router;
 

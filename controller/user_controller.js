@@ -2,7 +2,8 @@ const User = require('../models/user_model');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');  // 이메일인증
 const jwt = require('jsonwebtoken');
-const fs = require('fs')
+const fs = require('fs');
+const { db } = require('../models/user_model');
 require('dotenv').config();
 
 const MY_SECRET_KEY = process.env.SECRET_KEY
@@ -30,9 +31,9 @@ exports.create = function(request, response, next) {
     if(!accountEmail || !accountPw || !accountName)
         return response.status(500).json({message: "모든 항목입력주세요"})
     
-    const checkUser = User.findOne({accountEmail: accountEmail});
-    if(checkUser)
-        return response.status(409).json({message: "이미 존재하는이메일입니다"})
+    // const checkUser = User.findOne({accountEmail: accountEmail});
+    // if(checkUser)
+    //     return response.status(409).json({message: "이미 존재하는이메일입니다"})
     
     user.save(function(err){  // save 처리 전에 해싱이 이뤄져야함
         if (err) {
@@ -101,9 +102,19 @@ exports.confirm = function(request, response){ // @ 이 %40 으로 인코딩되�
 }
 
 exports.updateProfile =  async (request, response) => {
-    await response.send(request.file)
+    const { accountName } = request.body
+    const { accountImg } = request.file
+    var token = request.headers.token  
+    var decoded_token = jwt.verify(token, MY_SECRET_KEY);
+
+    if (decoded_token) {
+        var user = await User.findOne({_id:decoded_token.user})
+        var data = await { accountName,accountImg }
+        var update = await User.updateOne(user, data)
+        return response.send(update)
+    } 
 }
- 
+
 exports.tokentest = async (request, response) => {
     var token = request.headers.token  // header에서 토큰 받아오기
     var decoded_token = jwt.verify(token, MY_SECRET_KEY); // 생성한토큰 decoded
