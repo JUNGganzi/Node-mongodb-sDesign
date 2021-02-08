@@ -109,8 +109,8 @@ exports.updateProfile =  async (request, response) => {
 
     if (decoded_token) {
         var user = await User.findOne({_id:decoded_token.user})
-        var data = await { accountName,accountImg }
-        var update = await User.updateOne(user, data)
+        var data = await { accountName,accountImg } 
+        var update = await User.updateOne(user, data) // formdata 라 json 형태로 못받고 몽고db쿼리문째로 response
         return response.send(update)
     } 
 }

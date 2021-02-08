@@ -207,8 +207,8 @@
  *        - in: "formData"
  *          name: "userFile"
  *          required: true
+ *          type: file
  *          schema:
- *            type: file
  *        - in: "formData"
  *          name: "soundName"
  *          required: true
@@ -221,11 +221,10 @@
  *        - in: "formData"
  *          name: "tags"
  *          required: true
- *          schema:
- *            type: array
- *            items: 
- *              type: string
- *            maxItems: 5
+ *          type: array
+ *          items: 
+ *            type: string
+ *          maxItems: 5
  *        responses:
  *          200:
  *            description: "[완료]업로드가 성공 되었습니다."

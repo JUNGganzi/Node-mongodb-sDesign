@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken')
 
 var soundSchema = new mongoose.Schema({
     accountId:{
-        type: String
+        type: mongoose.Schema.Types.ObjectId, // populate
+        ref: "User"                           // ObjectId 실제객체로 치환
     },
     fileName: {
         type: String
@@ -18,18 +19,18 @@ var soundSchema = new mongoose.Schema({
         type: String
     },
     tags: {
-        type: String
+        type: Array
     }
 })
 
 
-soundSchema.methods.generateToken = function () {
-    const token = jwt.sign(this.accountId, "secretToken");
-    this.token = token;
-    return this.save()
-        .then((sound) => user)
-        .catch((err) => err)
-}
+// soundSchema.methods.generateToken = function () {
+//     const token = jwt.sign(this.accountId, "secretToken");
+//     this.token = token;
+//     return this.save()
+//         .then((sound) => user)
+//         .catch((err) => err)
+// }
 
 
 soundSchema.set('timestamps', true) 

@@ -1,18 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const soundController = require("../controller/sound_controller");
+const userController = require("../controller/user_controller");
 const multer = require('multer')
-const upload = multer({
-    dest: 'soundsfiles/'
-});
+// const upload = multer({
+//     dest: 'soundsfiles/'
+// });
 
-router.post("/upload/file")
+var storage = multer.diskStorage({ 
+    destination: function(request, file, cb) { // 저장위치설정 
+        cb(null,'soundsfiles')
+    },
+    filename: function(requset, file, cb) { // 파일 저장할때 제목설정 
+        cb(null,file.fieldname + '-' + Date.now()) // 저장되는 시점의 시각으로 이미지 저장
+    }
+})
+
+
+var upload = multer({storage:storage})
+
+router.post("/upload/file", upload.single('userFile'),soundController.upload)
 
 router.get("/get/soundList")
 
 router.get("/get/my/soundList")
 
-router.post("/remove/my/sound")
+router.post("/remove/my/sound", soundController.remove)
 
 router.get("/search/sound")
 
