@@ -27,6 +27,8 @@ exports.create = function(request, response, next) {
     user.accountEmail = accountEmail;
     user.accountPw = accountPw;
     user.accountName = accountName;
+    user.created = Date.now()  // 포포몬쓰 차원
+    user.updated = Date.now()
 
     if(!accountEmail || !accountPw || !accountName)
         return response.status(500).json({message: "모든 항목입력주세요"})
@@ -69,7 +71,7 @@ exports.login = async (request,response) => { // async 문을 사용해서 콜�
         if (comparePassword) { // 해시처리된 암호 비교구문
             var token = jwt.sign({user:user._id}, MY_SECRET_KEY,{
                 subject: "sDesign jwtoken",
-                expiresIn: '60m'  // 시간제한
+                expiresIn: '1000m'  // 시간제한
             })
             response.status(200).json({
                 token,
@@ -103,15 +105,18 @@ exports.confirm = function(request, response){ // @ 이 %40 으로 인코딩되�
 
 exports.updateProfile =  async (request, response) => {
     const { accountName } = request.body
-    const { accountImg } = request.file
+    const userImg = request.file
+    
     var token = request.headers.token  
     var decoded_token = jwt.verify(token, MY_SECRET_KEY);
 
     if (decoded_token) {
         var user = await User.findOne({_id:decoded_token.user})
-        var data = await { accountName,accountImg } 
+        var filename = userImg.path
+        var data = await { accountName,accountImg:filename } 
         var update = await User.updateOne(user, data) // formdata 라 json 형태로 못받고 몽고db쿼리문째로 response
         return response.send(update)
+        
     } 
 }
 
@@ -142,7 +147,8 @@ exports.tokenprofile = async (request, response) => { // 거의동일함 tokente
         return response.status(200).json({
             _id: user._id,
             accountEmail: user.accountEmail,
-            accountName: user.accountName
+            accountName: user.accountName,
+            accountImg: user.accountImg
         })
     } else {
         response.status(500).json({

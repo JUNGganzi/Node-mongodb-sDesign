@@ -26,6 +26,12 @@ var userSchema = new mongoose.Schema({
     },
     accountImg: {
         type: String
+    },
+    created: {
+        type: Number
+    },
+    updated: {
+        type: Number
     }
 });
 // save 전에 비밀번호 암호화 
@@ -40,7 +46,7 @@ userSchema.pre("save", function(next){ // next 콜백은 save 전에 처리할�
     }
 });
 
-userSchema.set('timestamps', true) // 새 테이블 생성될때마다 created,updated 자동으로 현재시각 저장
+// userSchema.set('timestamps', true) // 새 테이블 생성될때마다 created,updated 자동으로 현재시각 저장
 
 mongoose.model('User', userSchema);
 module.exports = mongoose.model('User')

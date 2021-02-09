@@ -20,7 +20,10 @@ var soundSchema = new mongoose.Schema({
     },
     tags: {
         type: Array
-    }
+    },
+    created: {
+        type: Number
+    },
 })
 
 
@@ -33,7 +36,6 @@ var soundSchema = new mongoose.Schema({
 // }
 
 
-soundSchema.set('timestamps', true) 
 
 mongoose.model('Sound', soundSchema);
 module.exports = mongoose.model('Sound')

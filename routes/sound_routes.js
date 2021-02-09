@@ -21,9 +21,9 @@ var upload = multer({storage:storage})
 
 router.post("/upload/file", upload.single('userFile'),soundController.upload)
 
-router.get("/get/soundList")
+router.get("/get/soundList",soundController.getsoundlist)
 
-router.get("/get/my/soundList")
+router.get("/get/my/soundList",soundController.getmysoundlist)
 
 router.post("/remove/my/sound", soundController.remove)
 

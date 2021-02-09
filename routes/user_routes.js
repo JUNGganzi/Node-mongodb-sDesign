@@ -28,7 +28,7 @@ router.get("/token/test", userController.tokentest)
 // 토큰 으로 프로필정보불러오기
 router.get("/get/profile/info", userController.tokenprofile)
 // 토큰값으로 user 프로필 이미지 및 accountname update
-router.post("/update/profile", upload.single('thumbnail_userImg'),userController.updateProfile)// userImg =  키값
+router.post("/update/profile", upload.single('userImg'),userController.updateProfile)// userImg =  키값
 // userController.tokentest,
 module.exports = router;
 
