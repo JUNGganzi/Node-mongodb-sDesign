@@ -27,9 +27,9 @@ router.get("/get/my/soundList",soundController.getmysoundlist)
 
 router.post("/remove/my/sound", soundController.remove)
 
-router.get("/search/sound")
+router.get("/search/sound", soundController.search)
 
-router.get("/get/my/like/sounds")
+router.get("/get/my/like/sounds", soundController.mylike)
 
 
 module.exports = router;

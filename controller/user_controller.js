@@ -92,7 +92,7 @@ exports.login = async (request,response) => { // async 문을 사용해서 콜�
 }
 // 이메일 인증
 exports.confirm = function(request, response){ // @ 이 %40 으로 인코딩되는데 디코드 시켜야 swagger 에서도 가능
-    var email = request.query.email;            // 현재는 링크타고 움직여야함
+    const { email } = request.query            // 현재는 링크타고 움직여야함
 
     User.updateOne({accountEmail:email},{$set:{isAcceptEmail:true}}, function(err, user){
         if (err) {

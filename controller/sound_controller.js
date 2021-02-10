@@ -25,14 +25,13 @@ exports.upload =  async (request, response) => {
         
         sound.save()
 
-        // Sound.updateMany(sound,({fileName:filename,filePath:filepath}))
         return response.send({
             result:"파일이 업로드 되었습니다.",
             sound,
         })
     } 
 }
-// filename filepath 애로사항있음
+
 
 exports.remove =  async (request, response) => {
     var soundId = request.body
@@ -49,13 +48,14 @@ exports.remove =  async (request, response) => {
 
 exports.getsoundlist =  async (request, response) => {
     var getlist = request
-    var token = request.headers.token  
+    // var token = request.headers.token  
     
     if (getlist) {
         var user = await User.find()
-        var sound = await Sound.find().populate('accountId')
-        console.log(sound)
-        // return response.send(result)
+        var sound = await Sound.find().populate({
+            path: 'accountId',
+            select:['accountEmail', 'accountName','accountImg']})
+        return response.send(sound)
     } else {
         var user = await Sound.find()
         return response.send(user)
@@ -67,10 +67,35 @@ exports.getmysoundlist =  async (request, response) => {
     var decoded_token = jwt.verify(token, MY_SECRET_KEY);
     
     if (decoded_token) {
-        var user = await User.findOne({_id:decoded_token.user})
-        var result = await Sound.find({accountId:user})
-        return response.send({result})
+        var sound = await Sound.find().populate({
+            path: 'accountId',
+            select:['accountEmail', 'accountName','accountImg']})
+        return response.send(sound)
     }
 } 
-// 왜 accountId 에 user 정보가 들어있지않은지  
-// findOne, find, findAndPopulate
+
+
+exports.search =  async (request, response) => {
+    var { keyword } = request.query 
+    
+
+    if (keyword) {
+        var tags = await Sound.find({ tags: new RegExp(keyword) })
+        var sound = await Sound.find({ soundName: new RegExp(keyword)})
+        var category = await Sound.find({ category: new RegExp(keyword)})
+        var result = await [tags, sound, category]
+        response.send(result)
+    }
+} 
+
+exports.mylike =  async (request, response) => {
+    var { token } = request.headers 
+    var decoded_token = jwt.verify(token, MY_SECRET_KEY);
+    
+    if (decoded_token) {
+        var sound = await Sound.find({accountId:decoded_token.user,isLiked:true}).populate({
+            path: 'accountId',
+            select:['accountEmail', 'accountName','accountImg']})
+            response.send(sound)
+    }
+} 
