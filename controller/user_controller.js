@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');  // 이메일인증
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
-const { db } = require('../models/user_model');
 require('dotenv').config();
 
 const MY_SECRET_KEY = process.env.SECRET_KEY
@@ -64,8 +63,8 @@ exports.create = function(request, response, next) {
 // 로그인
 exports.login = async (request,response) => { // async 문을 사용해서 콜백함수 바로실행
     const { accountEmail, accountPw} = request.body;
-
     var user = await User.findOne({accountEmail:accountEmail, isAcceptEmail: true});
+
     if(user) { // DB에 bcrypt 해시처리된 암호확인 async await 콜백함수 바로실행
         const comparePassword = await bcrypt.compare(accountPw,user.accountPw);
         if (comparePassword) { // 해시처리된 암호 비교구문
@@ -109,6 +108,8 @@ exports.updateProfile =  async (request, response) => {
     
     var token = request.headers.token  
     var decoded_token = jwt.verify(token, MY_SECRET_KEY);
+
+    if (!accountName && !userImg) return res.send("7777"); 
 
     if (decoded_token) {
         var user = await User.findOne({_id:decoded_token.user})

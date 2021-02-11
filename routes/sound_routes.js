@@ -12,7 +12,7 @@ var storage = multer.diskStorage({
         cb(null,'soundsfiles')
     },
     filename: function(requset, file, cb) { // 파일 저장할때 제목설정 
-        cb(null,file.fieldname + '-' + Date.now()) // 저장되는 시점의 시각으로 이미지 저장
+        cb(null,file.fieldname + '-' + Date.now()) // 저장되는 시점의 시각으로 이미지 저장 UUID 만에하나 겹칤수도있음
     }
 })
 
