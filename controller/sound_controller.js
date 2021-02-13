@@ -1,5 +1,6 @@
 const Sound = require('../models/sound_model');
 const User = require('../models/user_model');
+const Like = require('../models/like_model')
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const path = require('path')
@@ -67,7 +68,8 @@ exports.getmysoundlist =  async (request, response) => {
     var decoded_token = jwt.verify(token, MY_SECRET_KEY);
     
     if (decoded_token) {
-        var sound = await Sound.find().populate({
+        var user = await User.findOne({_id:decoded_token.user})
+        var sound = await Sound.find({accountId:user}).populate({
             path: 'accountId',
             select:['accountEmail', 'accountName','accountImg']})
         return response.send(sound)
@@ -93,7 +95,8 @@ exports.mylike =  async (request, response) => {
     var decoded_token = jwt.verify(token, MY_SECRET_KEY);
     
     if (decoded_token) {
-        var sound = await Sound.find({accountId:decoded_token.user,isLiked:true}).populate({
+        var likeid = await Like.findOne({accountId:decoded_token.user})
+        var sound = await Sound.find({_id:likeid.soundId,isLiked:true}).populate({
             path: 'accountId',
             select:['accountEmail', 'accountName','accountImg']})
             response.send(sound)
