@@ -95,10 +95,12 @@ exports.mylike =  async (request, response) => {
     var decoded_token = jwt.verify(token, MY_SECRET_KEY);
     
     if (decoded_token) {
-        var likeid = await Like.findOne({accountId:decoded_token.user})
-        var sound = await Sound.find({_id:likeid.soundId,isLiked:true}).populate({
-            path: 'accountId',
-            select:['accountEmail', 'accountName','accountImg']})
-            response.send(sound)
+        var likeid = await Like.find({accountId:decoded_token.user}).populate({
+            path: 'soundId'
+        })
+        // var sound = await likeid.find({_id:likeid.soundId,isLiked:true}).populate({
+        //     path: 'accountId',
+        //     select:'accountEmail accountName accountImg'})
+            response.send(likeid)
     }
 } 
