@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+var mongoosePaginate = require('mongoose-paginate-v2')
+
 
 var soundSchema = new mongoose.Schema({
     accountId:{
@@ -22,7 +24,7 @@ var soundSchema = new mongoose.Schema({
     },
     tags: {
         type: Array,
-        index: true
+        index: true                                     
     },
     created: {
         type: Number
@@ -34,13 +36,13 @@ var soundSchema = new mongoose.Schema({
 
 
 // soundSchema.methods.generateToken = function () {
-//     const token = jwt.sign(this.accountId, "secretToken");
+//     const token = jwt.sign(this.accountId, "secretToken" );
 //     this.token = token;
 //     return this.save()
 //         .then((sound) => user)
 //         .catch((err) => err)
 // }
 
+soundSchema.plugin(mongoosePaginate);
 
-mongoose.model('Sound', soundSchema);
-module.exports = mongoose.model('Sound')
+module.exports = mongoose.model('Sound',soundSchema )

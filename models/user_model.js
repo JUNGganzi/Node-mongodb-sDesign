@@ -37,14 +37,14 @@ var userSchema = new mongoose.Schema({
 // save 전에 비밀번호 암호화 
 userSchema.pre("save", function(next){ // next 콜백은 save 전에 처리할거 다 하고 save 로 이동
     // .pre 를 통해 save 가 동작하기 전에 처리할 내용 설정
-    var user = this;
+    var user = this;    
     if (!user.isModified("accountPw")) { // user 내의 accountPw 와 대조
         return next();
     } else {
         user.accountPw = bcrypt.hashSync(user.accountPw);
         return next();
     }
-});
+});                     
 
 // userSchema.set('timestamps', true) // 새 테이블 생성될때마다 created,updated 자동으로 현재시각 저장
 

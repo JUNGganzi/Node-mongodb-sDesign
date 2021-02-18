@@ -107,7 +107,7 @@ exports.updateProfile =  async (request, response) => {
     const userImg = request.file
     
     var token = request.headers.token  
-    var decoded_token = jwt.verify(token, MY_SECRET_KEY);
+    var decoded_token = jwt.verify(token, MY_SECRET_KEY);                                           
 
     if (!accountName && !userImg) return res.send("7777"); 
 
