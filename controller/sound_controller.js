@@ -17,13 +17,13 @@ exports.upload =  async (request, response) => {
 
     var { token } = request.headers        
 
-    var decoded_token = jwt.verify(token, MY_SECRET_KEY);
+    var decoded_token = jwt.verify(token, MY_SECRET_KEY); // 토큰 디코드
 
     if (decoded_token) {
-        var user = await User.findOne({_id:decoded_token.user})
+        var user = await User.findOne({_id:decoded_token.user}) // 디코드 토큰 값을 User._id 찾아온다
         var accountId = user._id
         var fileName = soundfile.filename
-        var filePath = soundfile.path
+        var filePath = soundfile.path // 파일경로 path 함수
         var savestatus = await { accountId,soundName,category, tags, fileName,filePath  }
         var sound = await new Sound(savestatus) // formdata 라 json 형태로 못받고 몽고db쿼리문째로 response
         sound.created = Date.now()
@@ -59,7 +59,7 @@ exports.getsoundlist =  async (request, response) => {
 
     const { next, previous } = request.query
 
-    const query = {}
+    const query = {}  // pagianate promise usage 존재
 
     const myCustomLabels = {
         totalDocs: 'itemCount',
