@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken')
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 var likeSchema = new mongoose.Schema({
     accountId:{
@@ -30,6 +31,6 @@ var likeSchema = new mongoose.Schema({
 //         .catch((err) => err)
 // }
 
+likeSchema.plugin(mongoosePaginate);
 
-mongoose.model('Like', likeSchema);
-module.exports = mongoose.model('Like')
+module.exports = mongoose.model('Like', likeSchema)

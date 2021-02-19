@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-var mongoosePaginate = require('mongoose-paginate-v2')
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 
 var soundSchema = new mongoose.Schema({

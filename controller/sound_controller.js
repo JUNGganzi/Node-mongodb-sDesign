@@ -10,9 +10,13 @@ require('dotenv').config();
 const MY_SECRET_KEY = process.env.SECRET_KEY
 
 exports.upload =  async (request, response) => {
+
     const { soundName,category, tags } = request.body
+
     const soundfile = request.file
-    var { token } = request.headers         
+
+    var { token } = request.headers        
+
     var decoded_token = jwt.verify(token, MY_SECRET_KEY);
 
     if (decoded_token) {
@@ -33,9 +37,13 @@ exports.upload =  async (request, response) => {
 }
 
 
+
 exports.remove =  async (request, response) => {
+
     var soundId = request.body
+
     var token = request.headers.token  
+
     var decoded_token = jwt.verify(token, MY_SECRET_KEY);
     
     if (decoded_token) {
@@ -48,8 +56,11 @@ exports.remove =  async (request, response) => {
 
 
 exports.getsoundlist =  async (request, response) => {
+
     const { next, previous } = request.query
+
     const query = {}
+
     const myCustomLabels = {
         totalDocs: 'itemCount',
         docs: 'fileList',
@@ -61,14 +72,19 @@ exports.getsoundlist =  async (request, response) => {
         pagingCounter: 'slNo',
         meta: 'paginator',
     }
-    var popul = ({ path: 'accountId', select: 'accountEmail accountName accountImg' });
+
+    var popul = ({ path: 'accountId',
+        select: 'accountEmail accountName accountImg' }); // populate options 
+
     const options = {
         limit: 4,
         customLabels: myCustomLabels,
-        sort: {_id:1},
+        sort: {_id: 1 },
         populate: popul,
-    };                                                      
-    var getlist = request                                                                                                                                                                                                                       
+    };                        
+
+    var getlist = request        
+
     if (getlist)   
     var result = await Sound.paginate(query, options, next, previous)
     response.send({
@@ -84,28 +100,70 @@ exports.getsoundlist =  async (request, response) => {
 }                                   
 
 
-exports.getmysoundlist =  async (request, response) => {                                    
+exports.getmysoundlist =  async (request, response) => {
+
     var token = request.headers.token  
-    var decoded_token = jwt.verify(token, MY_SECRET_KEY);                     
-    
+
+    var decoded_token = jwt.verify(token, MY_SECRET_KEY);   
+
+    const { next, previous } = request.query
+
+    const myCustomLabels = {
+        totalDocs: 'itemCount',
+        docs: 'fileList',
+        limit: 'perPage',
+        page: 'currentPage',
+        nextPage: 'next',
+        prevPage: 'prev',   
+        totalPages: 'pageCount',
+        pagingCounter: 'slNo',
+        meta: 'paginator',
+    }
+
+    var popul = ({ path: 'accountId',
+        select: 'accountEmail accountName accountImg' }); // populate options
+
+    const options = {
+        limit: 4,
+        customLabels: myCustomLabels,
+        sort: {_id: 1 },
+        populate: popul,
+    };                                    
+
     if (decoded_token) {
         var user = await User.findOne({_id:decoded_token.user})
-        var sound = await Sound.find({accountId:user}).populate({
-            path: 'accountId',
-            select:['accountEmail', 'accountName','accountImg']})
-        return response.send(sound)
+        var result = await Sound.paginate({accountId:user}, options, next, previous)
+        return response.send(result)
     }
 } 
 
 
 exports.search =  async (request, response) => {
-    var { keyword } = request.query 
-    
+
+    const { keyword, next, previous } = request.query
+
+    const myCustomLabels = {
+        totalDocs: 'itemCount',
+        docs: 'fileList',
+        limit: 'perPage',
+        page: 'currentPage',
+        nextPage: 'next',
+        prevPage: 'prev',   
+        totalPages: 'pageCount',
+        pagingCounter: 'slNo',
+        meta: 'paginator',
+    };
+
+    const options = {
+        limit: 4,
+        customLabels: myCustomLabels,
+        sort: {_id: 1 },
+    };                           
 
     if (keyword) {
-        var tags = await Sound.find({ tags: new RegExp(keyword) })
-        var sound = await Sound.find({ soundName: new RegExp(keyword)})
-        var category = await Sound.find({ category: new RegExp(keyword)})
+        var tags = await Sound.paginate({ tags: new RegExp(keyword)}, options, next, previous)
+        var sound = await Sound.paginate({ soundName: new RegExp(keyword)}, options, next, previous)
+        var category = await Sound.paginate({ category: new RegExp(keyword)}, options, next, previous)
         var result = await [tags, sound, category]
         response.send(result)
     }
@@ -113,12 +171,34 @@ exports.search =  async (request, response) => {
 
 exports.mylike =  async (request, response) => {
     var { token } = request.headers 
+
     var decoded_token = jwt.verify(token, MY_SECRET_KEY);
+
+    const { next, previous } = request.query
+
+    const myCustomLabels = {
+        totalDocs: 'itemCount',
+        docs: 'fileList',
+        limit: 'perPage',
+        page: 'currentPage',
+        nextPage: 'next',
+        prevPage: 'prev',   
+        totalPages: 'pageCount',
+        pagingCounter: 'slNo',
+        meta: 'paginator',
+    };
+
+    var popul = ({ path: 'soundId'});
     
+    const options = {
+        limit: 4,
+        customLabels: myCustomLabels,
+        sort: {_id: 1 },
+        populate: popul,
+    };                                       
+
     if (decoded_token) {
-        var likeid = await Like.find({accountId:decoded_token.user}).populate({
-            path: 'soundId'
-        })
+        var likeid = await Like.paginate({accountId:decoded_token.user}, options, next, previous)
         // var sound = await likeid.find({_id:likeid.soundId,isLiked:true}).populate({
         //     path: 'accountId',
         //     select:'accountEmail accountName accountImg'})
