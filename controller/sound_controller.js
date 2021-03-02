@@ -24,7 +24,7 @@ exports.upload =  async (request, response) => {
         var accountId = user._id
         var fileName = soundfile.filename
         var filePath = soundfile.path // 파일경로 path 함수
-        var savestatus = await { accountId,soundName,category, tags, fileName,filePath  }
+        var savestatus = await { accountId, soundName, category, tags, fileName, filePath  }
         var sound = await new Sound(savestatus) // formdata 라 json 형태로 못받고 몽고db쿼리문째로 response
         sound.created = Date.now()
     
