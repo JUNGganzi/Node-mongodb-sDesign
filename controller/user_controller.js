@@ -10,8 +10,8 @@ const MY_SECRET_KEY = process.env.SECRET_KEY
 var transporter = nodemailer.createTransport({  // transporter 에서 보낼 메일아이디와 비번 설정
     service: 'gmail',
     auth: {
-        user:'bodercoding@gmail.com',
-        pass:'codingboder'
+    user:'bodercoding@gmail.com',
+    pass:'codingboder'
     }
 })
 
@@ -60,6 +60,7 @@ exports.create = function(request, response, next) {
         });
     });
 };
+
 // 로그인
 exports.login = async (request,response) => { // async 문을 사용해서 콜백함수 바로실행
     const { accountEmail, accountPw} = request.body;
