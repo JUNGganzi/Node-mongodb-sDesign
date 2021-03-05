@@ -51,7 +51,7 @@ exports.create = function(request, response, next) {
             to: user.accountEmail,
             subject: '이메일 인증해주쎕세리띠',
             html: '<p>아래의 링크를 클릭해서 인증해주센!</p>' +
-            "<a href='http://localhost:3000/api/confirm/account" + '?email=' + user.accountEmail +" '>인증하기</a>"
+            "<a href='https://bodercoding.xyz/api/confirm/account" + '?email=' + user.accountEmail +" '>인증하기</a>"
         };
         transporter.sendMail(mailOption, function(err, res){ // 메일 발송
             if (err) {
