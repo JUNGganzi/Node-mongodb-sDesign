@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');  // 이메일인증
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
+const { body, validationResult } = require('express-validator');
 require('dotenv').config();
 
 const MY_SECRET_KEY = process.env.SECRET_KEY
@@ -14,6 +15,8 @@ var transporter = nodemailer.createTransport({  // transporter 에서 보낼 메
     pass:'codingboder'
     }
 })
+
+
 
 // 회원가입 
 exports.create = function(request, response, next) {
@@ -59,7 +62,8 @@ exports.create = function(request, response, next) {
             transporter.close();
         });
     });
-};
+};                                                                                                                                                                                                                                                                                              
+
 
 // 로그인
 exports.login = async (request,response) => { // async 문을 사용해서 콜백함수 바로실행
@@ -90,6 +94,8 @@ exports.login = async (request,response) => { // async 문을 사용해서 콜�
         })
     }
 }
+
+
 // 이메일 인증
 exports.confirm = function(request, response){ // @ 이 %40 으로 인코딩되는데 디코드 시켜야 swagger 에서도 가능
     const { email } = request.query            // 현재는 링크타고 움직여야함
@@ -102,6 +108,7 @@ exports.confirm = function(request, response){ // @ 이 %40 으로 인코딩되�
         }
     })
 }
+
 
 exports.updateProfile =  async (request, response) => {
     const { accountName } = request.body
@@ -122,6 +129,7 @@ exports.updateProfile =  async (request, response) => {
     } 
 }
 
+
 exports.tokentest = async (request, response) => {
     var token = request.headers.token  // header에서 토큰 받아오기
     var decoded_token = jwt.verify(token, MY_SECRET_KEY); // 생성한토큰 decoded
@@ -139,6 +147,7 @@ exports.tokentest = async (request, response) => {
         })
     }
 }
+
 
 exports.tokenprofile = async (request, response) => { // 거의동일함 tokentest랑
     var token = request.headers.token

@@ -79,6 +79,7 @@ exports.getsoundlist =  async (request, response) => {
         select: 'accountEmail accountName accountImg' }); // populate options 
 
     const options = {
+        page: next,
         limit: 4,
         customLabels: myCustomLabels,
         sort: {_id: 1 },
@@ -110,6 +111,8 @@ exports.getmysoundlist =  async (request, response) => {
 
     const { next, previous } = request.query
 
+
+
     const myCustomLabels = {
         totalDocs: 'itemCount',
         docs: 'fileList',
@@ -126,6 +129,7 @@ exports.getmysoundlist =  async (request, response) => {
         select: 'accountEmail accountName accountImg' }); // populate options
 
     const options = {
+        page : next,
         limit: 4,
         customLabels: myCustomLabels,
         sort: {_id: 1 },
@@ -157,6 +161,7 @@ exports.search =  async (request, response) => {
     };
 
     const options = {
+        page : next,
         limit: 4,
         customLabels: myCustomLabels,
         sort: {_id: 1 },
@@ -193,6 +198,7 @@ exports.mylike =  async (request, response) => {
     var popul = ({ path: 'soundId'});
     
     const options = {
+        page : next,
         limit: 4,
         customLabels: myCustomLabels,
         sort: {_id: 1 },
@@ -212,5 +218,5 @@ exports.file_path = async (request, response, next) => {
     var { fileName } = request.params;
     var filePath = path.resolve(__dirname, "../soundsfiles/" + fileName );
 
-    return response.sendFile(filePath);
+    return response.sendFile(filePath)
 }
