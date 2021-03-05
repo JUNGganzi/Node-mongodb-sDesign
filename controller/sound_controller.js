@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const path = require('path');
 const { BADNAME } = require('dns');
+const { request } = require('http');
+const { response } = require('express');
 require('dotenv').config();
 
 const MY_SECRET_KEY = process.env.SECRET_KEY
@@ -23,7 +25,7 @@ exports.upload =  async (request, response) => {
         var user = await User.findOne({_id:decoded_token.user}) // 디코드 토큰 값을 User._id 찾아온다
         var accountId = user._id
         var fileName = soundfile.filename
-        var filePath = soundfile.path // 파일경로 path 함수
+        var filePath =  `http://localhost:3000/api/get/file/${fileName}`; // 파일경로 설정  해당경로에 접속시 해당 파일 열어볼수있게 
         var savestatus = await { accountId, soundName, category, tags, fileName, filePath  }
         var sound = await new Sound(savestatus) // formdata 라 json 형태로 못받고 몽고db쿼리문째로 response
         sound.created = Date.now()
@@ -204,4 +206,11 @@ exports.mylike =  async (request, response) => {
         //     select:'accountEmail accountName accountImg'})
             response.send(likeid)
     }
+}
+
+exports.file_path = async (request, response, next) => {
+    var { fileName } = request.params;
+    var filePath = path.resolve(__dirname, "../soundsfiles/" + fileName );
+
+    return response.sendFile(filePath);
 }

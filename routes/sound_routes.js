@@ -31,5 +31,6 @@ router.get("/search/sound", soundController.search)
 
 router.get("/get/my/like/sounds", soundController.mylike)
 
+router.get("/get/file/:fileName", soundController.file_path)
 
 module.exports = router;
