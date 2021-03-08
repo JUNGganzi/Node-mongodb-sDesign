@@ -3,6 +3,7 @@ const router = express.Router();
 const soundController = require("../controller/sound_controller");
 const userController = require("../controller/user_controller");
 const multer = require('multer')
+const path = require('path');
 // const upload = multer({
 //     dest: 'soundsfiles/'
 // });
@@ -12,7 +13,8 @@ var storage = multer.diskStorage({
         cb(null,'soundsfiles')
     },
     filename: function(requset, file, cb) { // 파일 저장할때 제목설정 
-        cb(null,file.fieldname + '-' + Date.now()) // 저장되는 시점의 시각으로 이미지 저장 UUID 만에하나 겹칤수도있음
+        var extension = path.extname(file.originalname); // 파일 확장자명 받아오기
+        cb(null,file.fieldname + '-' + Date.now() + extension) // 저장되는 시점의 시각으로 이미지 저장 UUID 만에하나 겹칤수도있음
     }
 })
 

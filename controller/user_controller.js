@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');  // 이메일인증
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
+const path = require('path');
 const { body, validationResult } = require('express-validator');
 require('dotenv').config();
 
@@ -122,7 +123,8 @@ exports.updateProfile =  async (request, response) => {
     if (decoded_token) {
         var user = await User.findOne({_id:decoded_token.user})
         var filename = userImg.filename
-        var data = await { accountName,accountImg : filename } 
+        var filePath =  `https://bodercoding.xyz/api/get/img/${filename}`;
+        var data = await { accountName, accountImg : filename, filePath } 
         var update = await User.updateOne(user, data) // formdata 라 json 형태로 못받고 몽고db쿼리문째로 response
         return response.send(update)
         
@@ -166,4 +168,11 @@ exports.tokenprofile = async (request, response) => { // 거의동일함 tokente
             message: "[에러]서버에 문제가 있어 회원 가입에 실패하였습니다."
         })
     }
+}
+
+exports.img_path = async (request, response, next) => {
+    var { filename } = request.params;
+    var filePath = path.resolve(__dirname, "../profiles/" + filename );
+
+    return response.sendFile(filePath)
 }

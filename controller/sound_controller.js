@@ -24,7 +24,7 @@ exports.upload =  async (request, response) => {
     if (decoded_token) {
         var user = await User.findOne({_id:decoded_token.user}) // 디코드 토큰 값을 User._id 찾아온다
         var accountId = user._id
-        var fileName = soundfile.filename
+        var fileName = soundfile.filename 
         var filePath =  `https://bodercoding.xyz/api/get/file/${fileName}`; // 파일경로 설정  해당경로에 접속시 해당 파일 열어볼수있게 
         var savestatus = await { accountId, soundName, category, tags, fileName, filePath  }
         var sound = await new Sound(savestatus) // formdata 라 json 형태로 못받고 몽고db쿼리문째로 response
@@ -112,7 +112,6 @@ exports.getmysoundlist =  async (request, response) => {
     const { next, previous } = request.query
 
 
-
     const myCustomLabels = {
         totalDocs: 'itemCount',
         docs: 'fileList',
@@ -176,7 +175,7 @@ exports.search =  async (request, response) => {
     }
 } 
 
-exports.mylike =  async (request, response) => {
+exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted false 인것만 
     var { token } = request.headers 
 
     var decoded_token = jwt.verify(token, MY_SECRET_KEY);
@@ -206,7 +205,7 @@ exports.mylike =  async (request, response) => {
     };                                       
 
     if (decoded_token) {
-        var likeid = await Like.paginate({accountId:decoded_token.user}, options, next, previous)
+        var likeid = await Like.paginate({accountId:decoded_token.user, isDeleted: false}, options, next, previous)
         // var sound = await likeid.find({_id:likeid.soundId,isLiked:true}).populate({
         //     path: 'accountId',
         //     select:'accountEmail accountName accountImg'})

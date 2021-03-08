@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require("../controller/user_controller");
 const multer = require('multer')
+const path = require('path');
 // const upload = multer({ // 저장위치설정
 //     dest: 'profiles/'
 // });
@@ -11,7 +12,8 @@ var storage = multer.diskStorage({
         cb(null,'profiles')
     },
     filename: function(requset, file, cb) { // 파일 저장할때 제목설정 
-        cb(null,file.fieldname + '-' + Date.now()) // 저장되는 시점의 시각으로 이미지 저장
+        var extension = path.extname(file.originalname); // 이미지파일확장자명
+        cb(null,file.fieldname + '-' + Date.now() + extension) // 저장되는 시점의 시각으로 이미지 저장
     }
 })
 
@@ -29,6 +31,8 @@ router.get("/token/test", userController.tokentest)
 router.get("/get/profile/info", userController.tokenprofile)
 // 토큰값으로 user 프로필 이미지 및 accountname update
 router.post("/update/profile", upload.single('userImg'),userController.updateProfile)// userImg =  키값
+
+router.get("/get/img/:filename", userController.img_path)
 // userController.tokentest,
 module.exports = router;
 
