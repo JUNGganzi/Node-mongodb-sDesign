@@ -4,8 +4,9 @@ const nodemailer = require('nodemailer');  // 이메일인증
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const sharp = require('sharp')
+const Joi = require('joi')
 const path = require('path');
-const { body, validationResult } = require('express-validator');
+
 require('dotenv').config();
 
 const MY_SECRET_KEY = process.env.SECRET_KEY
@@ -19,9 +20,9 @@ var transporter = nodemailer.createTransport({  // transporter 에서 보낼 메
 })
 
 
-
 // 회원가입 
-exports.create = function(request, response, next) {
+exports.create =  async (request, response, next) => {
+
     var accountEmail = request.body.accountEmail;
     var accountPw = request.body.accountPw;
     var accountName = request.body.accountName;
@@ -33,6 +34,7 @@ exports.create = function(request, response, next) {
     user.accountName = accountName;
     user.created = Date.now()  // 포포몬쓰 차원
     user.updated = Date.now()
+
 
     if(!accountEmail || !accountPw || !accountName)
         return response.status(500).json({message: "모든 항목입력주세요"})
@@ -128,10 +130,19 @@ exports.updateProfile =  async (request, response, next) => {
         var data = await { accountName, accountImg : filePath} 
         var update = await User.updateOne(user, data) // formdata 라 json 형태로 못받고 몽고db쿼리문째로 response
         
-        await sharp("./profiles/" + filename)
-            .resize(250, 250)
-            .jpeg({quality : 100})
-            .toFile("./profiles/thumbnail_" + filename)
+        await sharp("./profiles/" + filename) // 파일 리사이즈 순서 파일의위치와 이름 파일이 일차적으로 저장되고 썸네일이 붙은 파일로 리사이즈 되서 재저장
+            .resize(250, 250)                   // 리사이즈크기
+            .jpeg({quality : 100})              
+            .toFile("./profiles/thumbnail_" + filename)     // 새로 저장할위치와 이름
+        
+        const removepath = './profiles/' + filename
+
+        fs.unlink(removepath, (err) => {  // 원본파일 삭제 
+            if (err) {
+                console.log(err)
+                return
+            }
+        })
         return response.send(update)
 
     }
