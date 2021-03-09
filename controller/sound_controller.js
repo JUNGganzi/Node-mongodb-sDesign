@@ -61,35 +61,35 @@ exports.getsoundlist =  async (request, response) => {
 
     const { next, previous } = request.query
 
-    const query = {}  // pagianate promise usage 존재
-
-    const myCustomLabels = {
-        totalDocs: 'itemCount',
-        docs: 'fileList',
-        limit: 'perPage',
-        page: 'currentPage',
-        nextPage: 'next',
-        prevPage: 'prev',   
-        totalPages: 'pageCount',
-        pagingCounter: 'slNo',
-        meta: 'paginator',
-    }
+    // const query = {}  // pagianate promise usage 존재
+    
+    // const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
+    //     totalDocs: 'totalCount',
+    //     docs: 'fileList',
+    //     limit: 'limit',
+    //     page: 'currentPage',
+    //     nextPage: 'next',
+    //     prevPage: 'prev',   
+    //     totalPages: 'pageCount',
+    //     meta: 'paginator',
+    // }
 
     var popul = ({ path: 'accountId',
         select: 'accountEmail accountName accountImg' }); // populate options 
 
     const options = {
-        page: next,
+        page : parseInt(next, 10) || 1,
         limit: 4,
-        customLabels: myCustomLabels,
+        // customLabels: myCustomLabels, // 커스텀 생성시 추가내역
         sort: {_id: 1 },
         populate: popul,
     };                        
-
+    var result = await Sound.paginate({}, options, next, previous)
     var getlist = request        
 
     if (getlist)   
-    var result = await Sound.paginate(query, options, next, previous)
+    
+
     response.send({
         result
     })
@@ -112,25 +112,25 @@ exports.getmysoundlist =  async (request, response) => {
     const { next, previous } = request.query
 
 
-    const myCustomLabels = {
-        totalDocs: 'itemCount',
-        docs: 'fileList',
-        limit: 'perPage',
-        page: 'currentPage',
-        nextPage: 'next',
-        prevPage: 'prev',   
-        totalPages: 'pageCount',
-        pagingCounter: 'slNo',
-        meta: 'paginator',
-    }
+    // const myCustomLabels = {
+    //     totalDocs: 'itemCount',
+    //     docs: 'fileList',
+    //     limit: 'perPage',
+    //     page: 'currentPage',
+    //     nextPage: 'next',
+    //     prevPage: 'prev',   
+    //     totalPages: 'pageCount',
+    //     pagingCounter: 'slNo',
+    //     meta: 'paginator',
+    // }
 
     var popul = ({ path: 'accountId',
         select: 'accountEmail accountName accountImg' }); // populate options
 
     const options = {
-        page : next,
+        page : parseInt(next, 10) || 1,
         limit: 4,
-        customLabels: myCustomLabels,
+        // customLabels: myCustomLabels,
         sort: {_id: 1 },
         populate: popul,
     };                                    
@@ -147,22 +147,22 @@ exports.search =  async (request, response) => {
 
     const { keyword, next, previous } = request.query
 
-    const myCustomLabels = {
-        totalDocs: 'itemCount',
-        docs: 'fileList',
-        limit: 'perPage',
-        page: 'currentPage',
-        nextPage: 'next',
-        prevPage: 'prev',   
-        totalPages: 'pageCount',
-        pagingCounter: 'slNo',
-        meta: 'paginator',
-    };
+    // const myCustomLabels = {
+    //     totalDocs: 'itemCount',
+    //     docs: 'fileList',
+    //     limit: 'perPage',
+    //     page: 'currentPage',
+    //     nextPage: 'next',
+    //     prevPage: 'prev',   
+    //     totalPages: 'pageCount',
+    //     pagingCounter: 'slNo',
+    //     meta: 'paginator',
+    // };
 
     const options = {
-        page : next,
+        page : parseInt(next, 10) || 1,
         limit: 4,
-        customLabels: myCustomLabels,
+        // customLabels: myCustomLabels,
         sort: {_id: 1 },
     };                           
 
@@ -182,24 +182,24 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
 
     const { next, previous } = request.query
 
-    const myCustomLabels = {
-        totalDocs: 'itemCount',
-        docs: 'fileList',
-        limit: 'perPage',
-        page: 'currentPage',
-        nextPage: 'next',
-        prevPage: 'prev',   
-        totalPages: 'pageCount',
-        pagingCounter: 'slNo',
-        meta: 'paginator',
-    };
+    // const myCustomLabels = {
+    //     totalDocs: 'itemCount',
+    //     docs: 'fileList',
+    //     limit: 'perPage',
+    //     page: 'currentPage',
+    //     nextPage: 'next',
+    //     prevPage: 'prev',   
+    //     totalPages: 'pageCount',
+    //     pagingCounter: 'slNo',
+    //     meta: 'paginator',
+    // };
 
     var popul = ({ path: 'soundId'});
     
     const options = {
-        page : next,
+        page : parseInt(next, 10) || 1,
         limit: 4,
-        customLabels: myCustomLabels,
+        // customLabels: myCustomLabels,
         sort: {_id: 1 },
         populate: popul,
     };                                       
