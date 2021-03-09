@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');  // 이메일인증
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
+const sharp = require('sharp')
 const path = require('path');
 const { body, validationResult } = require('express-validator');
 require('dotenv').config();
@@ -111,7 +112,7 @@ exports.confirm = function(request, response){ // @ 이 %40 으로 인코딩되�
 }
 
 
-exports.updateProfile =  async (request, response) => {
+exports.updateProfile =  async (request, response, next) => {
     const { accountName } = request.body
     const userImg = request.file
     
@@ -124,11 +125,16 @@ exports.updateProfile =  async (request, response) => {
         var user = await User.findOne({_id:decoded_token.user})
         var filename = userImg.filename
         var filePath =  `https://bodercoding.xyz/api/get/img/${filename}`;
-        var data = await { accountName, accountImg : filename, filePath } 
+        var data = await { accountName, accountImg : filePath} 
         var update = await User.updateOne(user, data) // formdata 라 json 형태로 못받고 몽고db쿼리문째로 response
-        return response.send(update)
         
-    } 
+        await sharp("./profiles/" + filename)
+            .resize(250, 250)
+            .jpeg({quality : 100})
+            .toFile("./profiles/thumbnail_" + filename)
+        return response.send(update)
+
+    }
 }
 
 

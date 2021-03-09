@@ -74,6 +74,8 @@ exports.getsoundlist =  async (request, response) => {
     //     meta: 'paginator',
     // }
 
+    // 클라단에서 무한스크롤링을 구현하기위해 next  페이징 이동구현
+
     var popul = ({ path: 'accountId',
         select: 'accountEmail accountName accountImg' }); // populate options 
 
