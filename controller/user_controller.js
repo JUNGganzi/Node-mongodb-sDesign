@@ -4,9 +4,7 @@ const nodemailer = require('nodemailer');  // 이메일인증
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const sharp = require('sharp')
-const Joi = require('joi')
 const path = require('path');
-
 require('dotenv').config();
 
 const MY_SECRET_KEY = process.env.SECRET_KEY
@@ -21,7 +19,7 @@ var transporter = nodemailer.createTransport({  // transporter 에서 보낼 메
 
 
 // 회원가입 
-exports.create =  async (request, response, next) => {
+exports.create = async (request, response, next) => {
 
     var accountEmail = request.body.accountEmail;
     var accountPw = request.body.accountPw;

@@ -3,6 +3,8 @@ const router = express.Router();
 const userController = require("../controller/user_controller");
 const multer = require('multer')
 const path = require('path');
+const { check, validationResult } = require("express-validator");
+
 // const upload = multer({ // 저장위치설정
 //     dest: 'profiles/'
 // });
@@ -19,20 +21,79 @@ var storage = multer.diskStorage({
 
 var upload = multer({storage:storage})
 
+
 // 회원가입
-router.post("/create/account", userController.create);
+router.post("/create/account", [
+    check("accountEmail")
+        .isEmail()
+        .withMessage("잘못된 이메일 주소입니다"),
+
+    check("accountPw")
+        .isLength({ min: 6, max: 15 })
+        .withMessage("비밀번호는 최소 6자에서 최대 15자로 설정해주세요")
+        .matches(/[!@#$%^&*(),.?":{}|<>]/)
+        .withMessage("한가지 이상의 특수문자가 포함되어야합니다"),
+
+],
+(req, res, next) => {
+    const error = validationResult(req).formatWith(({ msg }) => msg);
+
+    const hasError = !error.isEmpty();
+
+    if (hasError) {
+        res.status(422).json({ error: error.array() });
+    } else {
+        next();
+    }
+}, userController.create);
+
+
 // 이메일인증
 router.get("/confirm/account", userController.confirm);
+
+
 // 로그인
-router.post("/login", userController.login);
+router.post("/login", [
+    check("accountEmail")
+        .isEmail()
+        .withMessage("잘못된 이메일 주소입니다"),
+
+    check("accountPw")
+        .isLength({ min: 6, max: 15 })
+        .withMessage("비밀번호는 최소 6자에서 최대 15자로 설정해주세요")
+        .matches(/[!@#$%^&*(),.?":{}|<>]/)
+        .withMessage("한가지 이상의 특수문자가 포함되어야합니다"),
+
+],
+(req, res, next) => {
+    const error = validationResult(req).formatWith(({ msg }) => msg);
+
+    const hasError = !error.isEmpty();
+
+    if (hasError) {
+        res.status(422).json({ error: error.array() });
+    } else {
+        next();
+    }
+}, userController.login);
+
+
 // 토큰 디코드
 router.get("/token/test", userController.tokentest)
+
+
 // 토큰 으로 프로필정보불러오기
 router.get("/get/profile/info", userController.tokenprofile)
+
+
 // 토큰값으로 user 프로필 이미지 및 accountname update
 router.post("/update/profile", upload.single('userImg'),userController.updateProfile)// userImg =  키값
 
+
+
 router.get("/get/img/:filename", userController.img_path)
+
+
 // userController.tokentest,
 module.exports = router;
 
