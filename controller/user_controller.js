@@ -53,7 +53,7 @@ exports.create = async (request, response, next) => {
             to: user.accountEmail,
             subject: '이메일 인증해주쎕세리띠',
             html: '<p>아래의 링크를 클릭해서 인증해주센!</p>' +
-            "<a href='https://codingboder.xyz/api/confirm/account" + '?email=' + user.accountEmail +" '>인증하기</a>"
+            "<a href='https://jungganzi.xyz/api/confirm/account" + '?email=' + user.accountEmail +" '>인증하기</a>"
         };
         transporter.sendMail(mailOption, function(err, res){ // 메일 발송
             if (err) {
@@ -124,7 +124,7 @@ exports.updateProfile =  async (request, response, next) => {
     if (decoded_token) {
         var user = await User.findOne({_id:decoded_token.user})
         var filename = userImg.filename
-        var filePath =  `https://codingboder.xyz/api/get/img/thumbnail_${filename}`;
+        var filePath =  `https://jungganzi.xyz/api/get/img/thumbnail_${filename}`;
         var data = await { accountName, accountImg : filePath } 
         var update = await User.updateOne(user, data) // formdata 라 json 형태로 못받고 몽고db쿼리문째로 response
         
