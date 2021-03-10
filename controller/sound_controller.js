@@ -25,7 +25,7 @@ exports.upload =  async (request, response) => {
         var user = await User.findOne({_id:decoded_token.user}) // 디코드 토큰 값을 User._id 찾아온다
         var accountId = user._id
         var fileName = soundfile.filename 
-        var filePath =  `https://bodercoding.xyz/api/get/file/${fileName}`; // 파일경로 설정  해당경로에 접속시 해당 파일 열어볼수있게 
+        var filePath =  `https://codingboder.xyz/api/get/file/${fileName}`; // 파일경로 설정  해당경로에 접속시 해당 파일 열어볼수있게 
         var savestatus = await { accountId, soundName, category, tags, fileName, filePath  }
         var sound = await new Sound(savestatus) // formdata 라 json 형태로 못받고 몽고db쿼리문째로 response
         sound.created = Date.now()

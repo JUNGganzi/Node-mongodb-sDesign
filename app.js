@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const bodyParser = require("body-parser");
+const http = require('http')
+const https = require('https')
 
 
 require('dotenv').config({path:'variables.env'})
