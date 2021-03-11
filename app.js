@@ -6,11 +6,12 @@ const swaggerUi = require('swagger-ui-express');
 const bodyParser = require("body-parser");
 const http = require('http')
 const https = require('https')
+const cors = require('cors')
 
 
 require('dotenv').config({path:'variables.env'})
 
-
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
