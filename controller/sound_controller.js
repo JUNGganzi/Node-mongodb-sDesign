@@ -20,7 +20,7 @@ exports.upload =  async (request, response) => {
     var { token } = request.headers        
 
     var decoded_token = jwt.verify(token, MY_SECRET_KEY); // 토큰 디코드
-
+    if (!soundfile) return response.send("파일을 업로드 해주세요.");
     if (decoded_token) {
         var user = await User.findOne({_id:decoded_token.user}) // 디코드 토큰 값을 User._id 찾아온다
         var accountId = user._id

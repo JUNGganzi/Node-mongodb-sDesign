@@ -35,11 +35,11 @@ exports.create = async (request, response, next) => {
 
 
     if(!accountEmail || !accountPw || !accountName)
-        return response.status(500).json({message: "모든 항목입력주세요"})
+        return response.send("9176") // message: "모든 항목입력주세요"
     
-    // const checkUser = User.findOne({accountEmail: accountEmail});
-    // if(checkUser)
-    //     return response.status(409).json({message: "이미 존재하는이메일입니다"})
+    const checkUser = User.findOne({accountEmail: accountEmail});
+    if(checkUser)
+        return response.send("3588") // message: "이미 존재하는이메일입니다" 
     
     user.save(function(err){  // save 처리 전에 해싱이 이뤄져야함
         if (err) {
@@ -51,8 +51,8 @@ exports.create = async (request, response, next) => {
         var mailOption = { // 메일 옵션  설정
             from: 'bodercoding@gmail.com',
             to: user.accountEmail,
-            subject: '이메일 인증해주쎕세리띠',
-            html: '<p>아래의 링크를 클릭해서 인증해주센!</p>' +
+            subject: '이메일 인증해주세요',
+            html: '<p>아래의 링크를 클릭해서 인증해주세요!</p>' +
             "<a href='https://jungganzi.xyz/api/confirm/account" + '?email=' + user.accountEmail +" '>인증하기</a>"
         };
         transporter.sendMail(mailOption, function(err, res){ // 메일 발송
@@ -86,14 +86,13 @@ exports.login = async (request,response) => { // async 문을 사용해서 콜�
                 accountId: user._id
             })
         } else {
-            response.status(409).json({  // comparePassword 예외구문
-                message:"비밀번호가 다릅니다"
-            })
+            response.send("9991") // .json({  // comparePassword 예외구문
+                //  message:"비밀번호가 다릅니다"
         }
     } else {
-        response.status(500).json({
-            message:"이메일이 다르거나 이메일 인증 안됬음둥"
-        })
+        response.send("8883")//.json({
+            //message:"이메일이 다르거나 이메일 인증이 되지않았습니다"
+        //})
     }
 }
 
@@ -106,7 +105,7 @@ exports.confirm = function(request, response){ // @ 이 %40 으로 인코딩되�
         if (err) {
             console.log(err);
         } else {
-            response.send('<script type="text/javascript">alert("Successfully verified"); window.location="/"; </script>');
+            response.send('<script type="text/javascript">alert("Successfully verified"); window.location="https://jamong-prj.xyz/main"; </script>');
         }
     })
 }

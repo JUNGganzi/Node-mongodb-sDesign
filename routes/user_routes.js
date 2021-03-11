@@ -41,7 +41,7 @@ router.post("/create/account", [
     const hasError = !error.isEmpty();
 
     if (hasError) {
-        res.status(422).json({ error: error.array() });
+        res.send("3333") // message : 잘못된 이메일 주소이거나 , 비밀번호는 최소 6자에서 최대 15자, 특수문자가 1개이상이 포함되어야 합니다
     } else {
         next();
     }
@@ -71,7 +71,7 @@ router.post("/login", [
     const hasError = !error.isEmpty();
 
     if (hasError) {
-        res.status(422).json({ error: error.array() });
+        res.send("3077") // message : 이메일 혹은 비밀번호를 다시 확인해주세요
     } else {
         next();
     }
