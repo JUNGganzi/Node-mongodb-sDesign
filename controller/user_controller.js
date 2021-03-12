@@ -77,7 +77,7 @@ exports.login = async (request,response) => { // async 문을 사용해서 콜�
         if (comparePassword) { // 해시처리된 암호 비교구문
             var token = jwt.sign({user:user._id}, MY_SECRET_KEY,{
                 subject: "sDesign jwtoken",
-                expiresIn: '10m'  // 시간제한
+                expiresIn: '1440m'  // 시간제한
             })
             response.status(200).json({
                 token,
