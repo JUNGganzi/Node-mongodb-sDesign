@@ -53,29 +53,7 @@ router.get("/confirm/account", userController.confirm);
 
 
 // 로그인
-router.post("/login", [
-    check("accountEmail")
-        .isEmail()
-        .withMessage("잘못된 이메일 주소입니다"),
-
-    check("accountPw")
-        .isLength({ min: 6, max: 15 })
-        .withMessage("비밀번호는 최소 6자에서 최대 15자로 설정해주세요")
-        .matches(/[!@#$%^&*(),.?":{}|<>]/)
-        .withMessage("한가지 이상의 특수문자가 포함되어야합니다"),
-
-],
-(req, res, next) => {
-    const error = validationResult(req).formatWith(({ msg }) => msg);
-
-    const hasError = !error.isEmpty();
-
-    if (hasError) {
-        res.send("3077") // message : 이메일 혹은 비밀번호를 다시 확인해주세요
-    } else {
-        next();
-    }
-}, userController.login);
+router.post("/login", userController.login);
 
 
 // 토큰 디코드
