@@ -42,7 +42,7 @@ exports.upload =  async (request, response) => {
 
 exports.remove =  async (request, response) => {
 
-    var soundId = request.body
+    var { soundId } = request.body
 
     var token = request.headers.token  
 
@@ -50,9 +50,8 @@ exports.remove =  async (request, response) => {
     
     if (decoded_token) {
         var user = await User.findOne({_id:decoded_token.user})
-        var sound = await Sound.findOne({accountId:user})
-        var remove = await sound.deleteOne({_id:soundId})
-        return response.send({remove})
+        var sound = await Sound.findOneAndDelete({accountId:user, _id:soundId})
+        return response.send({sound})
     } 
 }  // swagger response 형태가 맘에안듬 후순위
 
