@@ -37,8 +37,8 @@ exports.create = async (request, response, next) => {
     if(!accountEmail || !accountPw || !accountName)
         return response.send("9176") // message: "모든 항목입력주세요"
     
-    const checkUser = User.findOne({accountEmail: accountEmail});
-    if(checkUser)
+    const checkUser = User.findOneAndUpdate({accountEmail: accountEmail}, {upsert : true});
+    if(checkUser.length == 0)
         return response.send("3588") // message: "이미 존재하는이메일입니다" 
     
     user.save(function(err){  // save 처리 전에 해싱이 이뤄져야함
@@ -77,7 +77,7 @@ exports.login = async (request,response) => { // async 문을 사용해서 콜�
         if (comparePassword) { // 해시처리된 암호 비교구문
             var token = jwt.sign({user:user._id}, MY_SECRET_KEY,{
                 subject: "sDesign jwtoken",
-                expiresIn: '1000m'  // 시간제한
+                expiresIn: '10m'  // 시간제한
             })
             response.status(200).json({
                 token,
@@ -118,7 +118,8 @@ exports.updateProfile =  async (request, response, next) => {
     var token = request.headers.token  
     var decoded_token = jwt.verify(token, MY_SECRET_KEY);                                           
 
-    if (!accountName && !userImg) return res.send("7777"); 
+    if (!accountName && !userImg) 
+        return response.send("7777");  // 따로따로
 
     if (decoded_token) {
         var user = await User.findOne({_id:decoded_token.user})

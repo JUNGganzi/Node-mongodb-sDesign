@@ -89,6 +89,7 @@
  *        - in: "header"
  *          name: "token"
  *          description: "jwt Token"
+ *          type: string
  *          required: true
  *          schema:
  *            type: string

@@ -63,16 +63,18 @@ exports.getsoundlist =  async (request, response) => {
 
     // const query = {}  // pagianate promise usage 존재
     
-    // const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
-    //     totalDocs: 'totalCount',
-    //     docs: 'fileList',
-    //     limit: 'limit',
-    //     page: 'currentPage',
-    //     nextPage: 'next',
-    //     prevPage: 'prev',   
-    //     totalPages: 'pageCount',
-    //     meta: 'paginator',
-    // }
+    const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
+        totalDocs: 'totalCount',
+        docs: 'fileList',
+        limit: 'limit',
+        page: 'currentPage',
+        nextPage: 'next',
+        prevPage: 'prev',
+        hasNextPage: 'hasNext',
+        hasPrevPage : 'hasPrevious',
+        totalPages: 'pageCount',
+        meta: 'paginator',
+    }
 
     // 클라단에서 무한스크롤링을 구현하기위해 next  페이징 이동구현
 
@@ -81,9 +83,9 @@ exports.getsoundlist =  async (request, response) => {
 
     const options = {
         page : parseInt(next, 10) || 1,
-        limit: 4,
-        // customLabels: myCustomLabels, // 커스텀 생성시 추가내역
-        sort: {_id: 1 },
+        limit: 10,
+        customLabels: myCustomLabels, // 커스텀 생성시 추가내역
+        sort: {created: -1 },
         populate: popul,
     };                        
     var result = await Sound.paginate({}, options, next, previous)
@@ -93,7 +95,10 @@ exports.getsoundlist =  async (request, response) => {
     
 
     response.send({
-        result
+        result,
+        // pagiantor: {
+        //     options
+        // }
     })
         // var user = await Sound.find().populate({
         //     path: 'accountId',
@@ -113,27 +118,27 @@ exports.getmysoundlist =  async (request, response) => {
 
     const { next, previous } = request.query
 
-
-    // const myCustomLabels = {
-    //     totalDocs: 'itemCount',
-    //     docs: 'fileList',
-    //     limit: 'perPage',
-    //     page: 'currentPage',
-    //     nextPage: 'next',
-    //     prevPage: 'prev',   
-    //     totalPages: 'pageCount',
-    //     pagingCounter: 'slNo',
-    //     meta: 'paginator',
-    // }
+    const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
+        totalDocs: 'totalCount',
+        docs: 'fileList',
+        limit: 'limit',
+        page: 'currentPage',
+        nextPage: 'next',
+        prevPage: 'prev',
+        hasNextPage: 'hasNext',
+        hasPrevPage : 'hasPrevious',
+        totalPages: 'pageCount',
+        meta: 'paginator',
+    }
 
     var popul = ({ path: 'accountId',
         select: 'accountEmail accountName accountImg' }); // populate options
 
     const options = {
         page : parseInt(next, 10) || 1,
-        limit: 4,
-        // customLabels: myCustomLabels,
-        sort: {_id: 1 },
+        limit: 10,
+        customLabels: myCustomLabels,
+        sort: {created: -1 },
         populate: popul,
     };                                    
 
@@ -149,30 +154,32 @@ exports.search =  async (request, response) => {
 
     const { keyword, next, previous } = request.query
 
-    // const myCustomLabels = {
-    //     totalDocs: 'itemCount',
-    //     docs: 'fileList',
-    //     limit: 'perPage',
-    //     page: 'currentPage',
-    //     nextPage: 'next',
-    //     prevPage: 'prev',   
-    //     totalPages: 'pageCount',
-    //     pagingCounter: 'slNo',
-    //     meta: 'paginator',
-    // };
+    const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
+        totalDocs: 'totalCount',
+        docs: 'fileList',
+        limit: 'limit',
+        page: 'currentPage',
+        nextPage: 'next',
+        prevPage: 'prev',
+        hasNextPage: 'hasNext',
+        hasPrevPage : 'hasPrevious',
+        totalPages: 'pageCount',
+        meta: 'paginator',
+    }
 
     const options = {
         page : parseInt(next, 10) || 1,
-        limit: 4,
-        // customLabels: myCustomLabels,
-        sort: {_id: 1 },
+        limit: 10,
+        customLabels: myCustomLabels,
+        sort: {created: -1 },
     };                           
 
     if (keyword) {
-        var tags = await Sound.paginate({ tags: new RegExp(keyword)}, options, next, previous)
-        var sound = await Sound.paginate({ soundName: new RegExp(keyword)}, options, next, previous)
-        var category = await Sound.paginate({ category: new RegExp(keyword)}, options, next, previous)
-        var result = await [tags, sound, category]
+        // var tags = await Sound.find({ tags: new RegExp(keyword)})
+        // var sound = await Sound.find({ soundName: new RegExp(keyword)})
+        // var category = await Sound.find({ category: new RegExp(keyword)})
+        // var search = [tags, sound, category]
+        var result = await Sound.paginate({$or: [{ tags: new RegExp(keyword)},{ soundName: new RegExp(keyword)},{ category: new RegExp(keyword)}  ] }, options, next, previous )
         response.send(result)
     }
 } 
@@ -184,26 +191,28 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
 
     const { next, previous } = request.query
 
-    // const myCustomLabels = {
-    //     totalDocs: 'itemCount',
-    //     docs: 'fileList',
-    //     limit: 'perPage',
-    //     page: 'currentPage',
-    //     nextPage: 'next',
-    //     prevPage: 'prev',   
-    //     totalPages: 'pageCount',
-    //     pagingCounter: 'slNo',
-    //     meta: 'paginator',
-    // };
+    const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
+        totalDocs: 'totalCount',
+        docs: 'fileList',
+        limit: 'limit',
+        page: 'currentPage',
+        nextPage: 'next',
+        prevPage: 'prev',
+        hasNextPage: 'hasNext',
+        hasPrevPage : 'hasPrevious',
+        totalPages: 'pageCount',
+        meta: 'paginator',
+    }
 
     var popul = ({ path: 'soundId'});
     
     const options = {
         page : parseInt(next, 10) || 1,
-        limit: 4,
-        // customLabels: myCustomLabels,
-        sort: {_id: 1 },
+        limit: 10,
+        customLabels: myCustomLabels,
+        sort: {created: -1 },
         populate: popul,
+        hasNextPage: hasNext,
     };                                       
 
     if (decoded_token) {
