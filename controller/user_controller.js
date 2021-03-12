@@ -20,12 +20,13 @@ var transporter = nodemailer.createTransport({  // transporter 에서 보낼 메
 
 // 회원가입 
 exports.create = async (request, response, next) => {
-
-    var accountEmail = request.body.accountEmail;
-    var accountPw = request.body.accountPw;
-    var accountName = request.body.accountName;
+    const { accountEmail, accountPw, accountName } = request.body;
 
     var user = new User();
+    
+
+    // if (checkUser)
+    //     return response.send("3588")
 
     user.accountEmail = accountEmail;
     user.accountPw = accountPw;
@@ -37,33 +38,36 @@ exports.create = async (request, response, next) => {
     if(!accountEmail || !accountPw || !accountName)
         return response.send("9176") // message: "모든 항목입력주세요"
     
-    const checkUser = User.findOneAndUpdate({accountEmail: accountEmail}, {upsert : true});
-    if(checkUser.length == 0)
-        return response.send("3588") // message: "이미 존재하는이메일입니다" 
-    
-    user.save(function(err){  // save 처리 전에 해싱이 이뤄져야함
-        if (err) {
-            throw err;
+    User.findOne({accountEmail: accountEmail}, function(err, results, next){
+        if (results) {
+            return response.send("3588")
         } else {
-            response.send(Array(user))
+            user.save(function(err){  // save 처리 전에 해싱이 이뤄져야함
+                if (err) {
+                    throw err
+                } else {
+                    response.send(Array(user))
+                }
+                // 회원가입과 동시에 가입 이메일로 메일 전송 user_models 에 Schema.pre 설정함 
+                var mailOption = { // 메일 옵션  설정
+                    from: 'bodercoding@gmail.com',
+                    to: user.accountEmail,
+                    subject: '이메일 인증해주세요',
+                    html: '<p>아래의 링크를 클릭해서 인증해주세요!</p>' +
+                    "<a href='https://jungganzi.xyz/api/confirm/account" + '?email=' + user.accountEmail +" '>인증하기</a>"
+                };
+                transporter.sendMail(mailOption, function(err, res){ // 메일 발송
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log('이메일발송성공')
+                    }
+                    transporter.close();
+                });
+            });
         }
-        // 회원가입과 동시에 가입 이메일로 메일 전송 user_models 에 Schema.pre 설정함 
-        var mailOption = { // 메일 옵션  설정
-            from: 'bodercoding@gmail.com',
-            to: user.accountEmail,
-            subject: '이메일 인증해주세요',
-            html: '<p>아래의 링크를 클릭해서 인증해주세요!</p>' +
-            "<a href='https://jungganzi.xyz/api/confirm/account" + '?email=' + user.accountEmail +" '>인증하기</a>"
-        };
-        transporter.sendMail(mailOption, function(err, res){ // 메일 발송
-            if (err) {
-                console.log(err);
-            } else {
-                console.log('이메일발송성공')
-            }
-            transporter.close();
-        });
-    });
+    })
+    
 };                                                                                                                                                                                                                                                                                              
 
 
