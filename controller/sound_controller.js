@@ -63,15 +63,16 @@ exports.getsoundlist =  async (request, response) => {
     // const query = {}  // pagianate promise usage 존재
     
     const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
-        totalDocs: 'totalCount',
+        totalDocs: false,
         docs: 'fileList',
-        limit: 'limit',
-        page: 'currentPage',
+        limit: false,
+        page: false,
         nextPage: 'next',
         prevPage: 'prev',
         hasNextPage: 'hasNext',
         hasPrevPage : 'hasPrevious',
-        totalPages: 'pageCount',
+        pagingCounter : false,
+        totalPages: false,
         meta: 'paginator',
     }
 
@@ -94,7 +95,8 @@ exports.getsoundlist =  async (request, response) => {
     
 
     response.send(
-        result)
+        result
+    )
         // pagiantor: {
         //     options)
         // var user = await Sound.find().populate({
@@ -116,15 +118,16 @@ exports.getmysoundlist =  async (request, response) => {
     const { next, previous } = request.query
 
     const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
-        totalDocs: 'totalCount',
+        totalDocs: false,
         docs: 'fileList',
-        limit: 'limit',
-        page: 'currentPage',
+        limit: false,
+        page: false,
         nextPage: 'next',
         prevPage: 'prev',
         hasNextPage: 'hasNext',
         hasPrevPage : 'hasPrevious',
-        totalPages: 'pageCount',
+        pagingCounter : false,
+        totalPages: false,
         meta: 'paginator',
     }
 
@@ -152,15 +155,16 @@ exports.search =  async (request, response) => {
     const { keyword, next, previous } = request.query
 
     const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
-        totalDocs: 'totalCount',
+        totalDocs: false,
         docs: 'fileList',
-        limit: 'limit',
-        page: 'currentPage',
+        limit: false,
+        page: false,
         nextPage: 'next',
         prevPage: 'prev',
         hasNextPage: 'hasNext',
         hasPrevPage : 'hasPrevious',
-        totalPages: 'pageCount',
+        pagingCounter : false,
+        totalPages: false,
         meta: 'paginator',
     }
 
@@ -189,19 +193,20 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
     const { next, previous } = request.query
 
     const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
-        totalDocs: 'totalCount',
+        totalDocs: false,
         docs: 'fileList',
-        limit: 'limit',
-        page: 'currentPage',
+        limit: false,
+        page: false,
         nextPage: 'next',
         prevPage: 'prev',
         hasNextPage: 'hasNext',
         hasPrevPage : 'hasPrevious',
-        totalPages: 'pageCount',
+        pagingCounter : false,
+        totalPages: false,
         meta: 'paginator',
     }
 
-    var popul = ({ path: 'soundId'});
+    var popul = ({ path: 'accountId soundId', select: 'accountEmail accountName accountImg' });
     
     const options = {
         page : parseInt(next, 10) || 1,
