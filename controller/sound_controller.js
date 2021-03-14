@@ -93,12 +93,10 @@ exports.getsoundlist =  async (request, response) => {
     if (getlist)   
     
 
-    response.send({
-        result,
+    response.send(
+        result)
         // pagiantor: {
-        //     options
-        // }
-    })
+        //     options)
         // var user = await Sound.find().populate({
         //     path: 'accountId',
         //     select:['accountEmail', 'accountName','accountImg']}
@@ -211,15 +209,14 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
         customLabels: myCustomLabels,
         sort: {created: -1 },
         populate: popul,
-        hasNextPage: hasNext,
     };                                       
 
     if (decoded_token) {
-        var likeid = await Like.paginate({accountId:decoded_token.user, isDeleted: false}, options, next, previous)
+        var result = await Like.paginate({accountId:decoded_token.user, isDeleted: false}, options, next, previous)
         // var sound = await likeid.find({_id:likeid.soundId,isLiked:true}).populate({
         //     path: 'accountId',
         //     select:'accountEmail accountName accountImg'})
-            response.send(likeid)
+            response.send(result)
     }
 }
 

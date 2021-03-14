@@ -30,9 +30,8 @@ router.post("/create/account", [
 
     check("accountPw")
         .isLength({ min: 6, max: 15 })
-        .withMessage("비밀번호는 최소 6자에서 최대 15자로 설정해주세요")
-        .matches(/[!@#$%^&*(),.?":{}|<>]/)
-        .withMessage("한가지 이상의 특수문자가 포함되어야합니다"),
+        .isAlphanumeric()
+        .withMessage("비밀번호는 최소 6자에서 최대 15자로 설정해주세요"),
 
 ],
 (req, res, next) => {
