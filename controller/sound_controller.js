@@ -64,11 +64,11 @@ exports.getsoundlist =  async (request, response) => {
     
     const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
         totalDocs: false,
-        docs: 'fileList',
+        docs: 'result',
         limit: false,
         page: false,
         nextPage: 'next',
-        prevPage: 'prev',
+        prevPage: 'previous',
         hasNextPage: 'hasNext',
         hasPrevPage : 'hasPrevious',
         pagingCounter : false,
@@ -88,15 +88,17 @@ exports.getsoundlist =  async (request, response) => {
         sort: {created: -1 },
         populate: popul,
     };                        
-    var result = await Sound.paginate({}, options, next, previous)
+    var docs = await Sound.paginate({}, options, next, previous)
+    var totalCount = await Sound.countDocuments()
+    var result = await docs.result
+    var paginator = await docs.paginator
+    var list =  { totalCount , result, paginator }
     var getlist = request        
 
     if (getlist)   
     
 
-    response.send(
-        result
-    )
+    response.send(list)
         // pagiantor: {
         //     options)
         // var user = await Sound.find().populate({
@@ -119,11 +121,11 @@ exports.getmysoundlist =  async (request, response) => {
 
     const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
         totalDocs: false,
-        docs: 'fileList',
+        docs: 'result',
         limit: false,
         page: false,
         nextPage: 'next',
-        prevPage: 'prev',
+        prevPage: 'previous',
         hasNextPage: 'hasNext',
         hasPrevPage : 'hasPrevious',
         pagingCounter : false,
@@ -144,8 +146,13 @@ exports.getmysoundlist =  async (request, response) => {
 
     if (decoded_token) {
         var user = await User.findOne({_id:decoded_token.user})
-        var result = await Sound.paginate({accountId:user}, options, next, previous)
-        return response.send(result)
+        var docs = await Sound.paginate({accountId:user}, options, next, previous)
+        var totalCount = await Sound.countDocuments({accountId:user})
+        var result = await docs.result
+        var paginator = await docs.paginator
+        var list =  { totalCount , result, paginator }
+
+        return response.send(list)
     }
 } 
 
@@ -156,11 +163,11 @@ exports.search =  async (request, response) => {
 
     const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
         totalDocs: false,
-        docs: 'fileList',
+        docs: 'result',
         limit: false,
         page: false,
         nextPage: 'next',
-        prevPage: 'prev',
+        prevPage: 'previous',
         hasNextPage: 'hasNext',
         hasPrevPage : 'hasPrevious',
         pagingCounter : false,
@@ -180,8 +187,12 @@ exports.search =  async (request, response) => {
         // var sound = await Sound.find({ soundName: new RegExp(keyword)})
         // var category = await Sound.find({ category: new RegExp(keyword)})
         // var search = [tags, sound, category]
-        var result = await Sound.paginate({$or: [{ tags: new RegExp(keyword)},{ soundName: new RegExp(keyword)},{ category: new RegExp(keyword)}  ] }, options, next, previous )
-        response.send(result)
+        var docs = await Sound.paginate({$or: [{ tags: new RegExp(keyword)},{ soundName: new RegExp(keyword)},{ category: new RegExp(keyword)}  ] }, options, next, previous )
+        var totalCount = await Sound.countDocuments({$or: [{ tags: new RegExp(keyword)},{ soundName: new RegExp(keyword)},{ category: new RegExp(keyword)}  ] })
+        var result = await docs.result
+        var paginator = await docs.paginator
+        var list =  { totalCount , result, paginator }
+        response.send(list)
     }
 } 
 
@@ -194,11 +205,11 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
 
     const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
         totalDocs: false,
-        docs: 'fileList',
+        docs: 'result',
         limit: false,
         page: false,
         nextPage: 'next',
-        prevPage: 'prev',
+        prevPage: 'previous',
         hasNextPage: 'hasNext',
         hasPrevPage : 'hasPrevious',
         pagingCounter : false,
@@ -206,7 +217,7 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
         meta: 'paginator',
     }
 
-    var popul = ({ path: 'accountId soundId', select: 'accountEmail accountName accountImg' });
+    var popul = ({ path: 'soundId'});
     
     const options = {
         page : parseInt(next, 10) || 1,
@@ -217,11 +228,16 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
     };                                       
 
     if (decoded_token) {
-        var result = await Like.paginate({accountId:decoded_token.user, isDeleted: false}, options, next, previous)
+        var docs = await Sound.paginate({accountId:decoded_token.user, isLiked: true}, options, next, previous)
+        var totalCount = await Sound.countDocuments({accountId:decoded_token.user, isLiked: true})
+        var result = await docs.result
+        var paginator = await docs.paginator
+        var list =  { totalCount , result, paginator }
+        
         // var sound = await likeid.find({_id:likeid.soundId,isLiked:true}).populate({
         //     path: 'accountId',
         //     select:'accountEmail accountName accountImg'})
-            response.send(result)
+            response.send(list)
     }
 }
 
