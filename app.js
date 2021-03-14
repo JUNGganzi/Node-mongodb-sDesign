@@ -13,8 +13,8 @@ require('dotenv').config({path:'variables.env'})
 
 
 
-app.use(bodyParser.json({limit : "50mb"}));
-app.use(bodyParser.urlencoded({ extended: false, limit:'1mb' }));
+app.use(bodyParser.json({limit : "10mb"})); // 용량제한 해제
+app.use(bodyParser.urlencoded({ extended: false, limit:'10mb' }));
 
 app.use(cors());
 
