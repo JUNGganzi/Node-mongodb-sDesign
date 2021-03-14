@@ -19,7 +19,7 @@ var storage = multer.diskStorage({
     }
 })
 
-var upload = multer({storage:storage, limits:{fileSize:20*1024*1024}})
+var upload = multer({storage:storage, limits:{fileSize:20*9999*9999}})
 
 
 // 회원가입
