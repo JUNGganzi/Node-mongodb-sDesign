@@ -50,7 +50,7 @@ npm install
 
 ## 정보
 
-My Portfolio – [@노션](https://www.notion.so/Hello-I-m-Louis-6ec5e3f6bde04aa89dd19509654ef465)
-My Email – wjdros1501@gmail.com
-My Blog– [@블로그](https://ganzicoder.tistory.com/)
+My Portfolio – [@노션](https://www.notion.so/Hello-I-m-Louis-6ec5e3f6bde04aa89dd19509654ef465)  
+My Email – wjdros1501@gmail.com  
+My Blog– [@블로그](https://ganzicoder.tistory.com/)  
 My Github–[https://github.com/JUNGganzi/](https://github.com/JUNGganzi)
