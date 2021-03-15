@@ -23,31 +23,38 @@ exports.like = async (request, response) => {
         var like_recheck = await Like.findOne({soundId:soundid, accountId:user, isDeleted:true})
         if (!like_check) {
             var user = await User.findOne({_id:decoded_token.user})
+            if (like_recheck) {
+                var like_recheck = await Like.updateOne({accountId:user, soundId:soundid}, {$set:{isDeleted:false}})
+                var test3 = await Sound.updateOne({_id:soundid},{$set:{isLiked:true}});
+                var result3  = {like_recheck, test3}
             
-            var accountId = user._id // _id = User.objectid
-             // _id = Sound.objectid
+                response.send(result3)
+            } else {
+                var accountId = user._id // _id = User.objectid
+                // _id = Sound.objectid
 
-            var like = new Like();
+                var like = new Like();
 
-            like.accountId = accountId
-            like.soundId = soundid
-            like.created = Date.now() // created time 설정
-            like.updated = Date.now() // updated time 설정
-            like.isDeleted = false
+                like.accountId = accountId
+                like.soundId = soundid
+                like.created = Date.now() // created time 설정
+                like.updated = Date.now() // updated time 설정
+                like.isDeleted = false
 
-            like.save()
+                like.save()
 
-            var isLikeid = like.soundId
-            var test = await Sound.updateOne({_id:isLikeid},{$set:{isLiked:true}});
-            var result = {like , test}
+                var isLikeid = like.soundId
+                var test = await Sound.updateOne({_id:isLikeid},{$set:{isLiked:true}});
+                var result = {like , test}
 
-            response.send(result)
+                response.send(result)
+            }
         } if (like_check) {
             var like_delete = await Like.updateOne({accountId:user, soundId:soundid}, {$set:{isDeleted:true}})
             var test2 = await Sound.updateOne({_id:soundid},{$set:{isLiked:false}});
-            var result  = {like_delete, test2}
+            var result2  = {like_delete, test2}
             
-            response.send(result)
+            response.send(result2)
         }
     // } if(decoded_token) {
     //     var user = await User.findOne({_id:decoded_token.user})
