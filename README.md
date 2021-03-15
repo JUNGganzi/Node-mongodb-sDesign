@@ -20,7 +20,7 @@
 OS X & 리눅스:
 1. Clone the repo
 ```sh
-git clone https://github.com/JiannKim/SDesign-vue.git
+git clone https://github.com/JUNGganzi/Node-mongodb-sDesign.git
 ```
 2.  Install NPM packages 
 ```
