@@ -217,7 +217,7 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
         meta: 'paginator',
     }
 
-    var popul = ({ path: 'soundId'});
+    var popul = ({ path: 'accountId soundId', select: 'accountEmail accountName accountImg fileName filePath soundName created category isLiked'});
     
     const options = {
         page : parseInt(next, 10) || 1,
@@ -228,8 +228,9 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
     };                                       
 
     if (decoded_token) {
-        var docs = await Sound.paginate({accountId:decoded_token.user, isLiked: true}, options, next, previous)
-        var totalCount = await Sound.countDocuments({accountId:decoded_token.user, isLiked: true})
+        // var mylike = await Like.find({accountId:decoded_token.user, isDeleted: false})
+        var docs = await Like.paginate({accountId:decoded_token.user, isDeleted: false}, options, next, previous)
+        var totalCount = await Like.countDocuments({accountId:decoded_token.user, isDeleted: false})
         var result = await docs.result
         var paginator = await docs.paginator
         var list =  { totalCount , result, paginator }
@@ -237,7 +238,8 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
         // var sound = await likeid.find({_id:likeid.soundId,isLiked:true}).populate({
         //     path: 'accountId',
         //     select:'accountEmail accountName accountImg'})
-            response.send(list)
+        response.send(list)
+        // console.log(mylike)
     }
 }
 

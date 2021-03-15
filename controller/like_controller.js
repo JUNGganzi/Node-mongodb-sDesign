@@ -40,9 +40,11 @@ exports.like = async (request, response) => {
             var test = await Sound.updateOne({_id:isLikeid},{$set:{isLiked:true}});
 
             response.send(like)
-        } else {
-            var like_delete = await Like.updateOne({accountId:user}, {$set:{isDeleted:true}})
-            response.send(like_delete)
+        } if (like_check) {
+            var like_delete = await Like.updateOne({accountId:user, soundId:soundid}, {$set:{isDeleted:true}})
+            var likedelete = like_delete
+            var test2 = await Sound.updateOne({_id:soundid},{$set:{isLiked:false}});
+            response.send(test2)
         }
     // } if(decoded_token) {
     //     var user = await User.findOne({_id:decoded_token.user})
