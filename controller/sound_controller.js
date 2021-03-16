@@ -183,10 +183,6 @@ exports.search =  async (request, response) => {
     };                           
 
     if (keyword) {
-        // var tags = await Sound.find({ tags: new RegExp(keyword)})
-        // var sound = await Sound.find({ soundName: new RegExp(keyword)})
-        // var category = await Sound.find({ category: new RegExp(keyword)})
-        // var search = [tags, sound, category]
         var docs = await Sound.paginate({$or: [{ tags: new RegExp(keyword)},{ soundName: new RegExp(keyword)},{ category: new RegExp(keyword)}  ] }, options, next, previous )
         var totalCount = await Sound.countDocuments({$or: [{ tags: new RegExp(keyword)},{ soundName: new RegExp(keyword)},{ category: new RegExp(keyword)}  ] })
         var result = await docs.result
@@ -203,6 +199,7 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
 
     const { next, previous } = request.query
 
+
     const myCustomLabels = {  // 커스텀으로 생성가능하지만 여기서는 하지않음
         totalDocs: false,
         docs: 'result',
@@ -217,8 +214,7 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
         meta: 'paginator',
     }
 
-    var popul = ({ path: 'accountId soundId', select: 'accountEmail accountName accountImg fileName filePath soundName created category isLiked'});
-    
+    var popul = ({ path: 'accountId', select: 'accountEmail accountName accountImg '});
     const options = {
         page : parseInt(next, 10) || 1,
         limit: 10,
@@ -228,9 +224,10 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
     };                                       
 
     if (decoded_token) {
-        // var mylike = await Like.find({accountId:decoded_token.user, isDeleted: false})
-        var docs = await Like.paginate({accountId:decoded_token.user, isDeleted: false}, options, next, previous)
-        var totalCount = await Like.countDocuments({accountId:decoded_token.user, isDeleted: false})
+        var mylike = await Like.find({accountId:decoded_token.user, isDeleted: false}).select('-_id soundId') // _id 빼기위해 - 설정
+        var soundIds = mylike.map((s) => s.soundId)
+        var docs = await Sound.paginate({ _id : {$in : soundIds}, isLiked:true}, options, next, previous, {sort: {created : -1}})
+        var totalCount = await Sound.countDocuments({ _id : {$in : soundIds}, isLiked:true})
         var result = await docs.result
         var paginator = await docs.paginator
         var list =  { totalCount , result, paginator }
@@ -239,7 +236,7 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
         //     path: 'accountId',
         //     select:'accountEmail accountName accountImg'})
         response.send(list)
-        // console.log(mylike)
+        // console.log(result)
     }
 }
 
