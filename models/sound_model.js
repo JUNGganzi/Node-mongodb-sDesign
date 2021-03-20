@@ -35,14 +35,6 @@ var soundSchema = new mongoose.Schema({
 })
 
 
-// soundSchema.methods.generateToken = function () {
-//     const token = jwt.sign(this.accountId, "secretToken" );
-//     this.token = token;
-//     return this.save()
-//         .then((sound) => user)
-//         .catch((err) => err)
-// }
-
 soundSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Sound',soundSchema )

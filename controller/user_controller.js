@@ -1,4 +1,5 @@
 const User = require('../models/user_model');
+const Like = require('../models/like_model');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');  // 이메일인증
 const jwt = require('jsonwebtoken');
@@ -7,6 +8,9 @@ const sharp = require('sharp')
 const path = require('path');
 const { send } = require('process');
 require('dotenv').config();
+
+
+
 
 const MY_SECRET_KEY = process.env.SECRET_KEY
 

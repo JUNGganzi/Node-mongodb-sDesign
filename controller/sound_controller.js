@@ -7,9 +7,14 @@ const path = require('path');
 const { BADNAME } = require('dns');
 const { request } = require('http');
 const { response } = require('express');
+const { paginate } = require('mongoose-paginate-v2');
+const ObjectId = require("mongoose").Types.ObjectId;
 require('dotenv').config();
 
+
+
 const MY_SECRET_KEY = process.env.SECRET_KEY
+
 
 exports.upload =  async (request, response) => {
 
@@ -58,6 +63,9 @@ exports.remove =  async (request, response) => {
 
 exports.getsoundlist =  async (request, response) => {
 
+    var { token } = request.headers 
+
+    var decoded_token = jwt.verify(token, MY_SECRET_KEY);
     const { next, previous } = request.query
 
     // const query = {}  // pagianate promise usage 존재
@@ -87,28 +95,35 @@ exports.getsoundlist =  async (request, response) => {
         customLabels: myCustomLabels, // 커스텀 생성시 추가내역
         sort: {created: -1 },
         populate: popul,
-    };                        
-    var docs = await Sound.paginate({}, options, next, previous)
-    var totalCount = await Sound.countDocuments()
-    var result = await docs.result
-    var paginator = await docs.paginator
-    var list =  { totalCount , result, paginator }
-    var getlist = request        
+        nextPage : 0
+    };
 
-    if (getlist)   
-    
+    if (!token) {
+        var updateall = await Sound.updateMany({$set : {isLiked:false}})
+        var docs = await Sound.paginate({}, options, next, previous)
+        var totalCount = await Sound.countDocuments()
+        var result = await docs.result
+        var paginator = await docs.paginator
+        var list =  { totalCount , result, paginator }
+        console.log(updateall)
+        response.send(list)
+    };
 
-    response.send(list)
-        // pagiantor: {
-        //     options)
-        // var user = await Sound.find().populate({
-        //     path: 'accountId',
-        //     select:['accountEmail', 'accountName','accountImg']}
-        // )
-
-        
-
-}                                   
+    if (decoded_token) {
+        var updateall = await Sound.updateMany({$set : {isLiked:false}})
+        var mylike = await Like.find({accountId:decoded_token.user, isDeleted: false}).select('-_id soundId') // _id 빼기위해 - 설정
+        var soundIds = mylike.map((s) => s.soundId)
+        var update = await Sound.updateMany({ _id : {$in : soundIds}},{$set : {isLiked:true}})
+        var docs = await Sound.paginate({}, options, next, previous)
+        var totalCount = await Sound.countDocuments()
+        var result = await docs.result
+        var paginator = await docs.paginator
+        var list =  { totalCount , result, paginator }
+        console.log(updateall)
+        console.log(update)
+        return response.send(list)
+    }
+}                                 
 
 
 exports.getmysoundlist =  async (request, response) => {
@@ -150,7 +165,7 @@ exports.getmysoundlist =  async (request, response) => {
         var totalCount = await Sound.countDocuments({accountId:user})
         var result = await docs.result
         var paginator = await docs.paginator
-        var list =  { totalCount , result, paginator }
+        var list =  { totalCount , result , paginator }
 
         return response.send(list)
     }
@@ -231,12 +246,8 @@ exports.mylike =  async (request, response) => { // 토탈카운드 isDeleted fa
         var result = await docs.result
         var paginator = await docs.paginator
         var list =  { totalCount , result, paginator }
-        
-        // var sound = await likeid.find({_id:likeid.soundId,isLiked:true}).populate({
-        //     path: 'accountId',
-        //     select:'accountEmail accountName accountImg'})
+
         response.send(list)
-        // console.log(result)
     }
 }
 

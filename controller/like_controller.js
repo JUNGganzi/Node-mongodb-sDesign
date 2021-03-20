@@ -10,6 +10,7 @@ require('dotenv').config();
 
 const MY_SECRET_KEY = process.env.SECRET_KEY
 
+
 exports.like = async (request, response) => {
     var { soundId }  = request.body  // properties body 요청
     var { token } = request.headers 
