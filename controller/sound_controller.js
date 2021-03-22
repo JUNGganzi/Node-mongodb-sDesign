@@ -63,9 +63,9 @@ exports.remove =  async (request, response) => {
 
 exports.getsoundlist =  async (request, response) => {
 
-    var { token } = request.headers 
+    var token = request.headers.token  
 
-    var decoded_token = jwt.verify(token, MY_SECRET_KEY);
+    
     const { next, previous } = request.query
 
     // const query = {}  // pagianate promise usage 존재
@@ -105,11 +105,12 @@ exports.getsoundlist =  async (request, response) => {
         var result = await docs.result
         var paginator = await docs.paginator
         var list =  { totalCount , result, paginator }
-        console.log(updateall)
+        console.log("empty token", updateall)
         response.send(list)
     };
 
-    if (decoded_token) {
+    if (token) {
+        var decoded_token = jwt.verify(token, MY_SECRET_KEY);
         var updateall = await Sound.updateMany({$set : {isLiked:false}})
         var mylike = await Like.find({accountId:decoded_token.user, isDeleted: false}).select('-_id soundId') // _id 빼기위해 - 설정
         var soundIds = mylike.map((s) => s.soundId)
@@ -160,13 +161,18 @@ exports.getmysoundlist =  async (request, response) => {
     };                                    
 
     if (decoded_token) {
-        var user = await User.findOne({_id:decoded_token.user})
-        var docs = await Sound.paginate({accountId:user}, options, next, previous)
-        var totalCount = await Sound.countDocuments({accountId:user})
+        var decoded_token = jwt.verify(token, MY_SECRET_KEY);
+        var updateall = await Sound.updateMany({$set : {isLiked:false}})
+        var mylike = await Like.find({accountId:decoded_token.user, isDeleted: false}).select('-_id soundId') // _id 빼기위해 - 설정
+        var soundIds = mylike.map((s) => s.soundId)
+        var update = await Sound.updateMany({ _id : {$in : soundIds}},{$set : {isLiked:true}})
+        var docs = await Sound.paginate({}, options, next, previous)
+        var totalCount = await Sound.countDocuments()
         var result = await docs.result
         var paginator = await docs.paginator
-        var list =  { totalCount , result , paginator }
-
+        var list =  { totalCount , result, paginator }
+        console.log(updateall)
+        console.log(update)
         return response.send(list)
     }
 } 
