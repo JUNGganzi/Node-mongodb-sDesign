@@ -57,20 +57,5 @@ exports.like = async (request, response) => {
             
             response.send(result2)
         }
-    // } if(decoded_token) {
-    //     var user = await User.findOne({_id:decoded_token.user})
-    //     var sound = await Sound.findOne({_id:soundId})
-    //     var accountId = user._id 
-    //     var soundid = sound._id 
-
-    //     like.soundId = soundid
-
-    //     var isLikeid = like.soundId
-    //     var test2 = await Like.findOne({soundId:soundid, isDeleted:false})
-
-    //     var test3 = await test2.
-
-    //     response.send(test3)
-    // }
     }
 }
